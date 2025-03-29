@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    android:orientation="vertical">
+
+    <!-- Barra Superior -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#1D3557"
+        android:gravity="center"
+        android:text="Camiseta ..."
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="#D3D3D3"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adicionar Imagem\n+"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewDescricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descrição"
+        android:textSize="22sp"
+        android:textColor="#A0A0A0"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/card_background"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textViewCamiseta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Camiseta"
+                android:textSize="30sp"
+                android:textColor="#000000"
+                android:paddingStart="5dp"/>
+        </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewValor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valor"
+        android:textSize="22sp"
+        android:textColor="#A0A0A0"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="4dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/textView120"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$: 120,00"
+            android:textSize="30sp"
+            android:textColor="#000000"
+            android:paddingStart="5dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewDetalhes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Detalhes do Produto"
+        android:textSize="22sp"
+        android:textColor="#A0A0A0"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="4dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="50dp"
+    />
+
+    <!-- Ícones na parte inferior -->
+    <LinearLayout
+        android:id="@+id/bottomIconsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- Ícone de Lixeira -->
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_button_red"
+            android:contentDescription="Deletar"
+            android:src="@drawable/ic_delete"
+            android:layout_marginEnd="40dp"/>
+
+        <!-- Espaço para empurrar o botão de check para a direita -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <!-- Ícone de Check Verde -->
+        <ImageButton
+            android:id="@+id/btnSave"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_button_green"
+            android:contentDescription="Salvar"
+            android:src="@drawable/ic_check"/>
+
+    </LinearLayout>
+
+</LinearLayout>

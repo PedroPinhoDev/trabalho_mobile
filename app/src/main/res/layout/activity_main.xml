@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    android:orientation="vertical">
+
+    <!-- Barra Superior -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#1D3557"
+        android:gravity="center"
+        android:text="Cadastro"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Card Item -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/itemImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/shirt_image"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$ 350,00"
+                android:textColor="#7E7E7E"
+                android:textSize="35sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/itemImageView2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/jeans_image"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/descriptionTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/priceTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$ 350,00"
+                android:textColor="#7E7E7E"
+                android:textSize="35sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/itemImageView3"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/bermuda_image"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/descriptionTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/priceTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$ 350,00"
+                android:textColor="#7E7E7E"
+                android:textSize="35sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/itemImageView4"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/chinelo_image"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/descriptionTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/priceTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$ 350,00"
+                android:textColor="#7E7E7E"
+                android:textSize="35sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Adicionar"
+            app:backgroundTint="#F4690C"
+            app:tint="@android:color/white"/>
+    </FrameLayout>
+
+
+</LinearLayout>
