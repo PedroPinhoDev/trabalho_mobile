@@ -13,7 +13,8 @@
         android:theme="@style/Theme.Trabalho"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+
+            android:name=".ItemOrderActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,3 +26,5 @@
     </application>
 
 </manifest>
+
+<!--    android:name=".MainActivity"-->
