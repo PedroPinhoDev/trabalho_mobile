@@ -17,7 +17,7 @@
         android:gravity="center"
         android:text="Cadastro"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:textStyle="bold" />
 
     <!-- Card Item -->
@@ -28,6 +28,7 @@
         android:background="@drawable/card_background"
         android:orientation="horizontal"
         android:padding="8dp">
+
 
         <ImageView
             android:id="@+id/itemImageView"
@@ -198,5 +199,53 @@
             app:tint="@android:color/white"/>
     </FrameLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="#1D3557"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_home"
+            android:contentDescription="Home"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+
+        <!-- Divisor -->
+        <View
+            android:layout_width="3dp"
+            android:layout_height="32dp"
+            android:layout_marginVertical="12dp"
+            android:background="#FFFFFF" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_cart"
+            android:contentDescription="Carrinho"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+
+        <!-- Divisor -->
+        <View
+            android:layout_width="3dp"
+            android:layout_height="32dp"
+            android:layout_marginVertical="12dp"
+            android:background="#FFFFFF" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_calendar"
+            android:contentDescription="Calendário"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+    </LinearLayout>
 
 </LinearLayout>
