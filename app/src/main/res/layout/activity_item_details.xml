@@ -15,7 +15,7 @@
         android:layout_height="56dp"
         android:background="#1D3557"
         android:gravity="center"
-        android:text="Camiseta ..."
+        android:text="Cadastro Produtos"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         android:textStyle="bold" />
@@ -54,24 +54,26 @@
         android:layout_marginBottom="4dp"
         android:layout_marginStart="20dp"/>
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/card_background"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/editTextCamiseta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/card_background"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/textViewCamiseta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Camiseta"
-                android:textSize="30sp"
-                android:textColor="#000000"
-                android:paddingStart="5dp"/>
-        </LinearLayout>
+            android:text="Camiseta"
+            android:textSize="30sp"
+            android:textColor="#000000"
+            android:paddingStart="5dp"
+            android:background="@android:color/white"
+            android:inputType="text" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewValor"
@@ -93,14 +95,16 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <TextView
-            android:id="@+id/textView120"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/editTextValor"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="R$: 120,00"
+            android:text="R$ 120,00"
             android:textSize="30sp"
             android:textColor="#000000"
-            android:paddingStart="5dp"/>
+            android:paddingStart="5dp"
+            android:background="@android:color/white"
+            android:inputType="numberDecimal"/>
     </LinearLayout>
 
     <TextView
@@ -114,16 +118,18 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="4dp"/>
 
-
     <EditText
+        android:id="@+id/editTextDetalhes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/card_background"
-        android:orientation="horizontal"
-        android:padding="50dp"
-    />
+        android:padding="16dp"
+        android:inputType="textMultiLine"
+        android:hint="Digite os detalhes do produto aqui..."
+        android:maxLines="5"
+        android:scrollbars="vertical" />
 
     <!-- Ícones na parte inferior -->
     <LinearLayout
@@ -132,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="-10dp"
-        android:gravity="center"
+        android:gravity="bottom"
         android:orientation="horizontal">
 
         <!-- Ícone de Lixeira -->
@@ -140,7 +146,7 @@
             android:id="@+id/btnDelete"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_margin="20dp"
+            android:layout_margin="16dp"
             android:background="@drawable/round_button_red"
             android:contentDescription="Deletar"
             android:src="@drawable/ic_delete"
@@ -157,7 +163,7 @@
             android:id="@+id/btnSave"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_margin="20dp"
+            android:layout_margin="16dp"
             android:background="@drawable/round_button_green"
             android:contentDescription="Salvar"
             android:src="@drawable/ic_check"/>

@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.Trabalho" parent="Base.Theme.Trabalho" />
+
+    <style name="ShapeAppearance.MyApp.FAB" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item> </style>
+
 </resources>
