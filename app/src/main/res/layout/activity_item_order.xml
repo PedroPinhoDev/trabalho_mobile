@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F0F0"
-    tools:context=".MainActivity">
+    tools:context=".ItemOrderActivity">
 
     <!-- Barra Superior -->
     <TextView
@@ -20,230 +20,297 @@
         android:textSize="30sp" />
 
     <!-- ScrollView contendo os itens -->
-    <ScrollView
-        android:id="@+id/scrollViewItems"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewProdutos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/titleTextView"
-        android:layout_above="@+id/btnConfirmarPedido">
+        android:layout_above="@id/btnConfirmarPedido" />
 
-        <LinearLayout
-            android:id="@+id/linearItemsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Card do primeiro item -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@drawable/card_background"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/itemImageView"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginEnd="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/shirt_image" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/descriptionTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Descrição"
-                        android:textColor="#000000"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/priceTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="R$ 350,00"
-                        android:textColor="#7E7E7E"
-                        android:textSize="35sp" />
-                </LinearLayout>
-
-                <!-- CheckBox para seleção do item -->
-                <CheckBox
-                    android:id="@+id/checkBoxItem1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
-
-            <!-- Card do segundo item -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/itemImageView2"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginEnd="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/jeans_image" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/descriptionTextView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Descrição"
-                        android:textColor="#000000"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/priceTextView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="R$ 350,00"
-                        android:textColor="#7E7E7E"
-                        android:textSize="35sp" />
-                </LinearLayout>
-
-                <CheckBox
-                    android:id="@+id/checkBoxItem2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
-
-            <!-- Card do terceiro item -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/itemImageView3"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginEnd="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/bermuda_image" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/descriptionTextView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Descrição"
-                        android:textColor="#000000"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/priceTextView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="R$ 350,00"
-                        android:textColor="#7E7E7E"
-                        android:textSize="35sp" />
-                </LinearLayout>
-
-                <CheckBox
-                    android:id="@+id/checkBoxItem3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
-
-            <!-- Card do quarto item -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/card_background"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/itemImageView4"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginEnd="8dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/chinelo_image" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/descriptionTextView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Descrição"
-                        android:textColor="#000000"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/priceTextView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="R$ 350,00"
-                        android:textColor="#7E7E7E"
-                        android:textSize="35sp" />
-                </LinearLayout>
-
-                <CheckBox
-                    android:id="@+id/checkBoxItem4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Botão Confirmar Pedido fixo no rodapé -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnConfirmarPedido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="0px"
+        android:layout_above="@id/bottomBar"
         android:text="CONFIRMAR PEDIDO"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="35sp"
         android:background="@drawable/btn_green_rectangle"
-        app:backgroundTint="#4CAF50" />
+        app:backgroundTint="#4CAF50"
+        android:layout_marginBottom="4dp"/>
 
+    <!-- Barra Inferior -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="#1D3557"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_home"
+            android:contentDescription="Home"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="32dp"
+            android:layout_marginVertical="12dp"
+            android:background="#FFFFFF" />
+
+        <ImageView
+            android:id="@+id/carrinho"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_cart"
+            android:contentDescription="Carrinho"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="32dp"
+            android:layout_marginVertical="12dp"
+            android:background="#FFFFFF" />
+
+        <ImageView
+            android:id="@+id/historico"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_calendar"
+            android:contentDescription="Calendário"
+            android:layout_gravity="center"
+            android:padding="8dp" />
+    </LinearLayout>
 </RelativeLayout>
+
+<!--    <LinearLayout-->
+<!--            android:id="@+id/linearItemsContainer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            &lt;!&ndash; Card do primeiro item &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="16dp"-->
+<!--                android:background="@drawable/card_background"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="8dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/itemImageView"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="80dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/shirt_image" />-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/descriptionTextView"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Descrição"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:textSize="25sp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/priceTextView"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="R$ 350,00"-->
+<!--                        android:textColor="#7E7E7E"-->
+<!--                        android:textSize="35sp" />-->
+<!--                </LinearLayout>-->
+
+<!--                &lt;!&ndash; CheckBox para seleção do item &ndash;&gt;-->
+<!--                <CheckBox-->
+<!--                    android:id="@+id/checkBoxItem1"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical" />-->
+<!--            </LinearLayout>-->
+
+<!--            &lt;!&ndash; Card do segundo item &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="16dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:background="@drawable/card_background"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="8dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/itemImageView2"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="80dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/jeans_image" />-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/descriptionTextView2"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Descrição"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:textSize="25sp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/priceTextView2"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="R$ 350,00"-->
+<!--                        android:textColor="#7E7E7E"-->
+<!--                        android:textSize="35sp" />-->
+<!--                </LinearLayout>-->
+
+<!--                <CheckBox-->
+<!--                    android:id="@+id/checkBoxItem2"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical" />-->
+<!--            </LinearLayout>-->
+
+<!--            &lt;!&ndash; Card do terceiro item &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="16dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:background="@drawable/card_background"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="8dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/itemImageView3"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="80dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/bermuda_image" />-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/descriptionTextView3"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Descrição"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:textSize="25sp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/priceTextView3"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="R$ 350,00"-->
+<!--                        android:textColor="#7E7E7E"-->
+<!--                        android:textSize="35sp" />-->
+<!--                </LinearLayout>-->
+
+<!--                <CheckBox-->
+<!--                    android:id="@+id/checkBoxItem3"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical" />-->
+<!--            </LinearLayout>-->
+
+<!--            &lt;!&ndash; Card do quarto item &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="16dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:background="@drawable/card_background"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="8dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/itemImageView4"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="80dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/chinelo_image" />-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/descriptionTextView4"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Descrição"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:textSize="25sp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/priceTextView4"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="R$ 350,00"-->
+<!--                        android:textColor="#7E7E7E"-->
+<!--                        android:textSize="35sp" />-->
+<!--                </LinearLayout>-->
+
+<!--                <CheckBox-->
+<!--                    android:id="@+id/checkBoxItem4"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical" />-->
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
+
+<!--    &lt;!&ndash; Botão Confirmar Pedido fixo no rodapé &ndash;&gt;-->
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/btnConfirmarPedido"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_margin="0px"-->
+<!--        android:text="CONFIRMAR PEDIDO"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="@android:color/white"-->
+<!--        android:textSize="35sp"-->
+<!--        android:background="@drawable/btn_green_rectangle"-->
+<!--        app:backgroundTint="#4CAF50" />-->
+
+<!--</RelativeLayout>-->
