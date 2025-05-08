@@ -1,5 +1,7 @@
 package com.example.trabalho
 
+import Produto
+import ProdutoPedido
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -33,6 +35,23 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ItemDetailsActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE_ADD)
         }
+        val iconCarrinho = findViewById<ImageView>(R.id.carrinho)
+        iconCarrinho.setOnClickListener {
+            val listaProdutoPedido = produtos.map { produto ->
+                ProdutoPedido(
+                    imagemResId = produto.imagemResId,
+                    descricao = produto.descricao,
+                    preco = produto.valor,
+                    detalhes = produto.detalhes,
+                    selecionado = false
+                )
+            }
+
+            val intent = Intent(this, ItemOrderActivity::class.java)
+            intent.putParcelableArrayListExtra("produtos", ArrayList(listaProdutoPedido))
+            startActivity(intent)
+        }
+
     }
 
 
@@ -75,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             descricao.text = produto.descricao
             valor.text = "R$ ${produto.valor}"
             detalhes.text = produto.detalhes
-            imagem.setImageResource(produto.ImagemResId)
+            imagem.setImageResource(produto.imagemResId)
 
             // Clique para editar
             card.setOnClickListener {

@@ -1,19 +1,23 @@
 package com.example.trabalho
 
+import Produto
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class ItemDetailsActivity : AppCompatActivity() {
 
-    private var selectedImageResId = R.drawable.shirt_image
+    private var selectedImageResId = -1
     private var produtoIndex: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +32,7 @@ class ItemDetailsActivity : AppCompatActivity() {
         val btnSave = findViewById<ImageButton>(R.id.btnSave)
         val btnDelete = findViewById<ImageButton>(R.id.btnDelete)
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
+        val tituloTextView = findViewById<TextView>(R.id.titleTextView)
 
         // Se for edição
         val produtoEdit = intent.getSerializableExtra("produto") as? Produto
@@ -35,11 +40,15 @@ class ItemDetailsActivity : AppCompatActivity() {
 
         if (produtoEdit != null) {
             editDescricao.setText(produtoEdit.descricao)
-            editValor.setText(produtoEdit.valor)
+            editValor.setText(String.format("%.2f", produtoEdit.valor))
             editDetalhes.setText(produtoEdit.detalhes)
-            selectedImageResId = produtoEdit.ImagemResId
+            selectedImageResId = produtoEdit.imagemResId
             imageSelectButton.setImageResource(selectedImageResId)
+            tituloTextView.text = "Edição Produtos"
+        } else {
+            btnDelete.visibility = View.GONE
         }
+
 
         imageSelectButton.setOnClickListener {
             val images = arrayOf("Camisa", "Bermuda", "Jeans", "Chinelo")
@@ -59,7 +68,7 @@ class ItemDetailsActivity : AppCompatActivity() {
             val valor = editValor.text.toString().trim()
             val detalhes = editDetalhes.text.toString().trim()
 
-            if (descricao.isEmpty() || valor.isEmpty() || detalhes.isEmpty()) {
+            if (descricao.isEmpty() || valor.isEmpty() || detalhes.isEmpty() || selectedImageResId == -1) {
                 Toast.makeText(this, "Preencha todas as informações do cadastro", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -69,7 +78,7 @@ class ItemDetailsActivity : AppCompatActivity() {
             builder.setMessage("Deseja adicionar esse produto na lista de produtos?")
 
             builder.setPositiveButton("Sim") { dialog, _ ->
-                val produto = Produto(descricao, valor, detalhes, selectedImageResId)
+                val produto = Produto(descricao, valor.toDouble(), detalhes, selectedImageResId)
 
                 val intent = Intent()
                 intent.putExtra("produto", produto)

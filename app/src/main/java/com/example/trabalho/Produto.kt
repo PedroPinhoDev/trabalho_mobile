@@ -1,9 +1,8 @@
-package com.example.trabalho
 import java.io.Serializable
 
-data class Produto (
+data class Produto(
     val descricao: String,
-    val valor: String,
+    val valor: Double,
     val detalhes: String,
-    val ImagemResId: Int
+    val imagemResId: Int
 ) : Serializable
