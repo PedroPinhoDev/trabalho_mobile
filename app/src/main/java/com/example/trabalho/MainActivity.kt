@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_EDIT = 2
     }
 
-    private val produtos = mutableListOf<Produto>()
     private lateinit var listaLayout: LinearLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +34,11 @@ class MainActivity : AppCompatActivity() {
         fabAdd.setOnClickListener {
             val intent = Intent(this, ItemDetailsActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE_ADD)
+
         }
         val iconCarrinho = findViewById<ImageView>(R.id.carrinho)
         iconCarrinho.setOnClickListener {
-            val listaProdutoPedido = produtos.map { produto ->
+            val listaProdutoPedido = ProdutoRepository.produtos.map { produto ->
                 ProdutoPedido(
                     imagemResId = produto.imagemResId,
                     descricao = produto.descricao,
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             intent.putParcelableArrayListExtra("produtos", ArrayList(listaProdutoPedido))
             startActivity(intent)
         }
-
+        atualizarLista()
     }
 
 
@@ -60,8 +61,8 @@ class MainActivity : AppCompatActivity() {
 
         if (resultCode == RESULT_FIRST_USER) {
             val index = data?.getIntExtra("index", -1) ?: -1
-            if (index >= 0 && index < produtos.size) {
-                produtos.removeAt(index)
+            if (index >= 0 && index < ProdutoRepository.produtos.size) {
+                ProdutoRepository.produtos.removeAt(index)
             }
             atualizarLista()
             return
@@ -72,9 +73,9 @@ class MainActivity : AppCompatActivity() {
             val index = data?.getIntExtra("index", -1) ?: -1
 
             if (requestCode == REQUEST_CODE_ADD && produto != null) {
-                produtos.add(produto)
+                ProdutoRepository.produtos.add(produto)
             } else if (requestCode == REQUEST_CODE_EDIT && produto != null && index >= 0) {
-                produtos[index] = produto
+                ProdutoRepository.produtos[index] = produto
             }
 
             atualizarLista()
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun atualizarLista() {
         listaLayout.removeAllViews()
-        produtos.forEachIndexed { index, produto ->
+        ProdutoRepository.produtos.forEachIndexed { index, produto ->
             val card = layoutInflater.inflate(R.layout.item_produto, null)
 
             val descricao = card.findViewById<TextView>(R.id.descriptionTextView)

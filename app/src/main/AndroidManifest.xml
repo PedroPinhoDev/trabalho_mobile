@@ -26,6 +26,8 @@
         <activity android:name=".ItemDetailsActivity"/>
 
         <activity android:name=".ItemOrderActivity" />
+
+        <activity android:name=".ListasPedidosActivity" />
     </application>
 
 </manifest>

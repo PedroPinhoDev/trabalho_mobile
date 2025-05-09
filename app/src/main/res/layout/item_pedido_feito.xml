@@ -1,0 +1,31 @@
+<!-- layout_item_pedido.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <View
+        android:id="@+id/statusIndicator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/circle" />
+
+    <TextView
+        android:id="@+id/codigoPedido"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="P-01"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/valorPedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="R$ 350,00"
+        android:textSize="16sp" />
+</LinearLayout>

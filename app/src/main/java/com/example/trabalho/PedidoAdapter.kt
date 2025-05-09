@@ -38,7 +38,6 @@ class PedidoAdapter(
 
         // Atualiza estado ao clicar no checkbox
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            produto.selecionado = isChecked
             onItemCheckedChange(produto, isChecked)
         }
     }
