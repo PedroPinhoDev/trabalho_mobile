@@ -7,8 +7,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,13 +24,16 @@ class ItemOrderActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PedidoAdapter
+    private lateinit var adapterFeitos: PedidoFeitoAdapter
     private var orderNumber = 1
     private var listaProdutos: ArrayList<ProdutoPedido> = arrayListOf()
-    private val listaPedidosFeitos: ArrayList<ProdutoPedido> = arrayListOf() // Alterei para uma lista simples
+    private val listaPedidosFeitos: ArrayList<ProdutoPedido> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_order)
+
+        carregarPedidosFeitos()
 
         orderNumber = 1
         salvarNumeroPedido(orderNumber)
@@ -41,26 +46,41 @@ class ItemOrderActivity : AppCompatActivity() {
 
         val historicoIcon = findViewById<ImageView>(R.id.historico)
         historicoIcon.setOnClickListener {
-            val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
-            val gson = Gson()
-            val json = sharedPreferences.getString("pedidosFeitos", null)
-            val type = object : TypeToken<ArrayList<ProdutoPedido>>() {}.type // Agora é um único ArrayList<ProdutoPedido>
-            val pedidosSalvos: ArrayList<ProdutoPedido>? = gson.fromJson(json, type)
-
-            if (pedidosSalvos != null && pedidosSalvos.isNotEmpty()) {
+                // Navega para a ListasPedidosActivity ao clicar no ícone de histórico
                 val intent = Intent(this, ListasPedidosActivity::class.java)
                 startActivity(intent)
-            }
         }
+
 
         recyclerView = findViewById(R.id.recyclerViewProdutos)
         listaProdutos = intent.getParcelableArrayListExtra<ProdutoPedido>("produtos") ?: arrayListOf()
 
-        adapter = PedidoAdapter(listaProdutos) { produto, isChecked ->
-            produto.selecionado = isChecked
+        val textViewSemPedidos = findViewById<TextView>(R.id.textViewSemPedidos)
+
+        if (listaPedidosFeitos.isNotEmpty()) {
+            adapterFeitos = PedidoFeitoAdapter(listaPedidosFeitos){ pedido, position ->
+                // Exemplo de ação ao clicar em um pedido feito
+                val intent = Intent(this, DetalhesPedidoActivity::class.java)
+                intent.putExtra("pedidoSelecionado", Gson().toJson(pedido))
+                startActivity(intent)
+            }
+            recyclerView.adapter = adapterFeitos
+            textViewSemPedidos.visibility = View.GONE
+        } else {
+            // Caso contrário, mostre a lista de produtos com PedidoAdapter
+            adapter = PedidoAdapter(listaProdutos) { produto, isChecked ->
+                produto.selecionado = isChecked
+            }
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(this)
+
+            // Verifique se há produtos selecionados para mostrar ou não a mensagem
+            if (recyclerView.adapter?.itemCount == 0) {
+                textViewSemPedidos.visibility = View.VISIBLE
+            } else {
+                textViewSemPedidos.visibility = View.GONE
+            }
         }
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
 
         val btnConfirmarPedido: MaterialButton = findViewById(R.id.btnConfirmarPedido)
         btnConfirmarPedido.setOnClickListener {
@@ -142,6 +162,24 @@ class ItemOrderActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         salvarNumeroPedido(1)
+        listaPedidosFeitos.clear()
+
+        salvarPedidosEmPreferencias()
     }
+
+    private fun carregarPedidosFeitos() {
+        val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences.getString("pedidosFeitos", null)
+        val type = object : TypeToken<ArrayList<ProdutoPedido>>() {}.type
+        val pedidosSalvos: ArrayList<ProdutoPedido>? = gson.fromJson(json, type)
+
+        // Garantir que a lista foi carregada corretamente
+        if (pedidosSalvos != null) {
+            listaPedidosFeitos.clear()
+            listaPedidosFeitos.addAll(pedidosSalvos)
+        }
+    }
+
 }
 
