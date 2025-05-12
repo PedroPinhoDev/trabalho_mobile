@@ -10,17 +10,18 @@ import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 
 class PedidoFeitoAdapter(
-    private val listaPedidos: ArrayList<ProdutoPedido>,
-    private val clickListener: (ProdutoPedido, Int) -> Unit
+    private val listaPedidos: ArrayList<Pedido>,
+    private val clickListener: (Pedido, Int) -> Unit
 ) : RecyclerView.Adapter<PedidoFeitoAdapter.PedidoFeitoViewHolder>() {
 
     inner class PedidoFeitoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val statusIndicator: View = view.findViewById(R.id.statusIndicator)
         val codigoPedido: TextView = view.findViewById(R.id.codigoPedido)
         val valorPedido: TextView = view.findViewById(R.id.valorPedido)
+        val setaIndicativa: ImageView = view.findViewById(R.id.setaIndicativa)
 
         init {
-            view.setOnClickListener {
+            setaIndicativa.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     clickListener(listaPedidos[position], position)
@@ -38,18 +39,14 @@ class PedidoFeitoAdapter(
     override fun onBindViewHolder(holder: PedidoFeitoViewHolder, position: Int) {
         val pedido = listaPedidos[position]
 
-        // Exibe o código do pedido, como 'P-1', 'P-2', etc.
-        holder.codigoPedido.text = "P-${position + 1}"
-
-        // Exibe o valor do pedido com formatação monetária
-        holder.valorPedido.text = "R$ %.2f".format(pedido.preco)
-
-        // Define a cor do status do pedido (verde para confirmado, vermelho para pendente)
-        if (pedido.selecionado) {
-            holder.statusIndicator.setBackgroundColor(Color.GREEN) // Status 'confirmado'
-        } else {
-            holder.statusIndicator.setBackgroundColor(Color.RED) // Status 'pendente'
+        holder.codigoPedido.text = pedido.codigo
+        holder.valorPedido.text = "R$ %.2f".format(pedido.total)
+        when (pedido.status) {
+            "aberto" -> holder.statusIndicator.setBackgroundColor(Color.GRAY)
+            "fechado" -> holder.statusIndicator.setBackgroundColor(Color.GREEN)
+            "cancelado" -> holder.statusIndicator.setBackgroundColor(Color.RED)
         }
+
     }
 
     override fun getItemCount(): Int = listaPedidos.size

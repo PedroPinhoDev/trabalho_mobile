@@ -27,70 +27,70 @@ class ItemOrderActivity : AppCompatActivity() {
     private lateinit var adapterFeitos: PedidoFeitoAdapter
     private var orderNumber = 1
     private var listaProdutos: ArrayList<ProdutoPedido> = arrayListOf()
-    private val listaPedidosFeitos: ArrayList<ProdutoPedido> = arrayListOf()
+    private val listaPedidosFeitos: ArrayList<Pedido> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_order)
 
-        carregarPedidosFeitos()
-
-        orderNumber = 1
-        salvarNumeroPedido(orderNumber)
-
-        val homeIcon = findViewById<ImageView>(R.id.home)
-        homeIcon.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-
-        val historicoIcon = findViewById<ImageView>(R.id.historico)
-        historicoIcon.setOnClickListener {
-                // Navega para a ListasPedidosActivity ao clicar no ícone de histórico
-                val intent = Intent(this, ListasPedidosActivity::class.java)
-                startActivity(intent)
-        }
-
+        val modo = intent.getStringExtra("modo") ?: "historico"
 
         recyclerView = findViewById(R.id.recyclerViewProdutos)
-        listaProdutos = intent.getParcelableArrayListExtra<ProdutoPedido>("produtos") ?: arrayListOf()
-
         val textViewSemPedidos = findViewById<TextView>(R.id.textViewSemPedidos)
+        val btnConfirmarPedido: MaterialButton = findViewById(R.id.btnConfirmarPedido)
 
-        if (listaPedidosFeitos.isNotEmpty()) {
-            adapterFeitos = PedidoFeitoAdapter(listaPedidosFeitos){ pedido, position ->
-                // Exemplo de ação ao clicar em um pedido feito
+        if (modo == "pedido") {
+            // Mostrar produtos para selecionar e montar pedido
+            listaProdutos = intent.getParcelableArrayListExtra("produtos") ?: arrayListOf()
+
+            adapter = PedidoAdapter(listaProdutos) { produto, isChecked ->
+                produto.selecionado = isChecked
+            }
+
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = adapter
+
+            textViewSemPedidos.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
+
+            orderNumber = recuperarNumeroPedido()
+
+            btnConfirmarPedido.setOnClickListener {
+                if (nenhumItemSelecionado()) {
+                    mostrarAlerta("Nenhum item selecionado!")
+                } else {
+                    confirmarPedido()
+                }
+            }
+
+        } else {
+            // Mostrar pedidos feitos
+            carregarPedidosFeitos()
+
+            adapterFeitos = PedidoFeitoAdapter(listaPedidosFeitos) { pedido, position ->
                 val intent = Intent(this, DetalhesPedidoActivity::class.java)
                 intent.putExtra("pedidoSelecionado", Gson().toJson(pedido))
                 startActivity(intent)
             }
-            recyclerView.adapter = adapterFeitos
-            textViewSemPedidos.visibility = View.GONE
-        } else {
-            // Caso contrário, mostre a lista de produtos com PedidoAdapter
-            adapter = PedidoAdapter(listaProdutos) { produto, isChecked ->
-                produto.selecionado = isChecked
-            }
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(this)
 
-            // Verifique se há produtos selecionados para mostrar ou não a mensagem
-            if (recyclerView.adapter?.itemCount == 0) {
-                textViewSemPedidos.visibility = View.VISIBLE
-            } else {
-                textViewSemPedidos.visibility = View.GONE
-            }
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = adapterFeitos
+
+            textViewSemPedidos.visibility =
+                if (listaPedidosFeitos.isEmpty()) View.VISIBLE else View.GONE
+
+            // Oculta botão de confirmar, pois não faz sentido aqui
+            btnConfirmarPedido.visibility = View.GONE
         }
 
-        val btnConfirmarPedido: MaterialButton = findViewById(R.id.btnConfirmarPedido)
-        btnConfirmarPedido.setOnClickListener {
-            if (nenhumItemSelecionado()) {
-                mostrarAlerta("Nenhum item selecionado!")
-            } else {
-                confirmarPedido()
-            }
+        // Ícones de navegação
+        findViewById<ImageView>(R.id.home).setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+        findViewById<ImageView>(R.id.historico).setOnClickListener {
+            startActivity(Intent(this, ListasPedidosActivity::class.java))
         }
     }
+
 
     private fun confirmarPedido() {
         val mensagem = "Pedido $orderNumber confirmado com sucesso!"
@@ -99,29 +99,58 @@ class ItemOrderActivity : AppCompatActivity() {
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
 
+                // Salva o pedido feito
                 salvarPedidoFeito()
-                salvarPedidosEmPreferencias()
 
-                // Limpar os itens selecionados na lista de produtos
+                // Limpa os itens selecionados na lista de produtos
                 listaProdutos.forEach { it.selecionado = false }
 
-                // Notificar o adaptador para atualizar o RecyclerView
+                // Notifica o adaptador para atualizar o RecyclerView
                 adapter.notifyDataSetChanged()
 
-                // Incrementar o número do pedido para o próximo
+                // Incrementa o número do pedido para o próximo
                 orderNumber++
                 salvarNumeroPedido(orderNumber)
+
+                // Não redireciona para a tela de histórico aqui
+                // Remova ou comente a linha abaixo:
+                // val intent = Intent(this, ListasPedidosActivity::class.java)
+                // startActivity(intent)
             }
             .setCancelable(false)
         builder.create().show()
     }
 
+
     private fun salvarPedidoFeito() {
         val produtosSelecionados = listaProdutos.filter { it.selecionado }
         if (produtosSelecionados.isNotEmpty()) {
-            listaPedidosFeitos.addAll(produtosSelecionados) // Adiciona os produtos selecionados diretamente
+            val total = produtosSelecionados.sumOf { it.preco }
+            val codigoPedido = "P-${orderNumber++}"  // código único baseado no tempo
+
+            val pedido = Pedido(codigoPedido, produtosSelecionados, total)
+
+            // Carregar pedidos existentes
+            val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
+            val gson = Gson()
+            val pedidosExistentesJson = sharedPreferences.getString("pedidosFeitos", null)
+            val type = object : TypeToken<MutableList<Pedido>>() {}.type
+            val pedidosSalvos: MutableList<Pedido> = gson.fromJson(pedidosExistentesJson, type) ?: mutableListOf()
+
+            // Adicionar o novo pedido
+            pedidosSalvos.add(pedido)
+
+            // Salvar novamente os pedidos no SharedPreferences
+            val editor = sharedPreferences.edit()
+            editor.putString("pedidosFeitos", gson.toJson(pedidosSalvos))
+            editor.apply()
+
+            Log.d("Pedidos", "Pedido salvo com sucesso: ${gson.toJson(pedido)}")
         }
     }
+
+
+
 
     fun nenhumItemSelecionado(): Boolean {
         return listaProdutos.none { it.selecionado }
@@ -139,10 +168,8 @@ class ItemOrderActivity : AppCompatActivity() {
     private fun salvarPedidosEmPreferencias() {
         val sharedPreferences: SharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
         val gson = Gson()
         val json = gson.toJson(listaPedidosFeitos)
-
         editor.putString("pedidosFeitos", json)
         editor.apply()
     }
@@ -159,22 +186,21 @@ class ItemOrderActivity : AppCompatActivity() {
         editor.apply()
     }
 
-    override fun onStop() {
-        super.onStop()
-        salvarNumeroPedido(1)
-        listaPedidosFeitos.clear()
-
-        salvarPedidosEmPreferencias()
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        salvarNumeroPedido(1)
+////        listaPedidosFeitos.clear()
+////
+////        salvarPedidosEmPreferencias()
+//    }
 
     private fun carregarPedidosFeitos() {
         val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
         val gson = Gson()
         val json = sharedPreferences.getString("pedidosFeitos", null)
-        val type = object : TypeToken<ArrayList<ProdutoPedido>>() {}.type
-        val pedidosSalvos: ArrayList<ProdutoPedido>? = gson.fromJson(json, type)
+        val type = object : TypeToken<ArrayList<Pedido>>() {}.type
+        val pedidosSalvos: ArrayList<Pedido>? = gson.fromJson(json, type)
 
-        // Garantir que a lista foi carregada corretamente
         if (pedidosSalvos != null) {
             listaPedidosFeitos.clear()
             listaPedidosFeitos.addAll(pedidosSalvos)

@@ -2,33 +2,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imagemProduto"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:src="@drawable/ic_launcher_foreground"
-        android:layout_marginEnd="10dp"/>
+        android:layout_marginEnd="16dp"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/nomeProduto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome do Produto"
-            android:textSize="16sp"/>
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/precoProduto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="R$ 0.00"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#FF5722"/>
     </LinearLayout>
 
