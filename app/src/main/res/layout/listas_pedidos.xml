@@ -19,6 +19,7 @@
         android:textSize="30sp" />
 
 
+
     <!-- Lista de Pedidos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPedidos"
@@ -28,6 +29,17 @@
         android:layout_above="@id/bottomBar"
         android:padding="8dp"/>
 
+    <TextView
+        android:id="@+id/textViewVazio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="NENHUM PEDIDO ENCONTRADO"
+        android:textSize="20sp"
+        android:textColor="#888888"
+        android:visibility="gone" />
 
 
 

@@ -2,16 +2,20 @@ package com.example.trabalho
 
 import Produto
 import ProdutoPedido
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_ADD = 1
         const val REQUEST_CODE_EDIT = 2
     }
+
 
     private lateinit var listaLayout: LinearLayout
 
@@ -30,6 +35,13 @@ class MainActivity : AppCompatActivity() {
 
         listaLayout = findViewById(R.id.listaProdutosLayout)
         val fabAdd = findViewById<FloatingActionButton>(R.id.fabAdd)
+        val textViewSemProdutos = findViewById<TextView>(R.id.textViewSemProdutos)
+
+        if (listaLayout.childCount == 0) {
+            textViewSemProdutos.visibility = View.VISIBLE
+        } else {
+            textViewSemProdutos.visibility = View.GONE
+        }
 
         fabAdd.setOnClickListener {
             val intent = Intent(this, ItemDetailsActivity::class.java)
@@ -52,7 +64,14 @@ class MainActivity : AppCompatActivity() {
             intent.putParcelableArrayListExtra("produtos", ArrayList(listaProdutoPedido))
             startActivity(intent)
         }
+        val iconHistorico = findViewById<ImageView>(R.id.historico)
+        iconHistorico.setOnClickListener {
+            val intent = Intent(this, ListasPedidosActivity::class.java)
+            startActivity(intent)
+        }
         atualizarLista()
+        val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
+        sharedPreferences.edit().clear().apply()
     }
 
 
@@ -77,7 +96,6 @@ class MainActivity : AppCompatActivity() {
             } else if (requestCode == REQUEST_CODE_EDIT && produto != null && index >= 0) {
                 ProdutoRepository.produtos[index] = produto
             }
-
             atualizarLista()
         }
     }
