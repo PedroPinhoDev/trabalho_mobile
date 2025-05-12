@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ProdutoDetalheAdapter(private val produtos: List<Produto>) :
+class ProdutoDetalheAdapter(private val produtos: List<ProdutoPedido>) :
     RecyclerView.Adapter<ProdutoDetalheAdapter.ProdutoViewHolder>() {
 
     inner class ProdutoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -27,7 +27,7 @@ class ProdutoDetalheAdapter(private val produtos: List<Produto>) :
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
         val produto = produtos[position]
         holder.nome.text = produto.descricao
-        holder.preco.text = "R$ %.2f".format(produto.valor)
+        holder.preco.text = "R$ %.2f".format(produto.preco)
         holder.imagem.setImageResource(produto.imagemResId)
     }
 

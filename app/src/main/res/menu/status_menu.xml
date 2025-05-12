@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/statusAberto"
+        android:title="Aberto" />
+    <item
+        android:id="@+id/statusFechado"
+        android:title="Fechado" />
+    <item
+        android:id="@+id/statusCancelado"
+        android:title="Cancelado" />
+</menu>

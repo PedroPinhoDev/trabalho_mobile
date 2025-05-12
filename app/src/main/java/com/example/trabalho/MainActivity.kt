@@ -17,6 +17,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +33,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("pedidosFeitos") // Remove os pedidos feitos
+        editor.remove("orderNumber")   // Zera a contagem dos pedidos, se quiser
+        editor.apply()
         setContentView(R.layout.activity_main)
+
+
+        carregarProdutos()
 
         listaLayout = findViewById(R.id.listaProdutosLayout)
         val fabAdd = findViewById<FloatingActionButton>(R.id.fabAdd)
@@ -62,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, ItemOrderActivity::class.java)
             intent.putParcelableArrayListExtra("produtos", ArrayList(listaProdutoPedido))
+            intent.putExtra("modo", "pedido")
             startActivity(intent)
         }
         val iconHistorico = findViewById<ImageView>(R.id.historico)
@@ -70,8 +81,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         atualizarLista()
-        val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
-        sharedPreferences.edit().clear().apply()
+
     }
 
 
@@ -82,6 +92,7 @@ class MainActivity : AppCompatActivity() {
             val index = data?.getIntExtra("index", -1) ?: -1
             if (index >= 0 && index < ProdutoRepository.produtos.size) {
                 ProdutoRepository.produtos.removeAt(index)
+                salvarProdutos()
             }
             atualizarLista()
             return
@@ -96,6 +107,7 @@ class MainActivity : AppCompatActivity() {
             } else if (requestCode == REQUEST_CODE_EDIT && produto != null && index >= 0) {
                 ProdutoRepository.produtos[index] = produto
             }
+            salvarProdutos()
             atualizarLista()
         }
     }
@@ -125,5 +137,30 @@ class MainActivity : AppCompatActivity() {
 
             listaLayout.addView(card)
         }
+    }
+
+
+    private fun salvarProdutos() {
+        val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val produtosJson = gson.toJson(ProdutoRepository.produtos)
+        val editor = sharedPreferences.edit()
+        editor.putString("produtos", produtosJson)
+        editor.apply()
+    }
+
+    private fun carregarProdutos() {
+        val sharedPreferences = getSharedPreferences("pedidos", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val produtosJson = sharedPreferences.getString("produtos", "[]")
+        val type = object : TypeToken<List<Produto>>() {}.type
+        val produtos: List<Produto> = gson.fromJson(produtosJson, type)
+        ProdutoRepository.produtos.clear()
+        ProdutoRepository.produtos.addAll(produtos)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        atualizarLista()
     }
 }
