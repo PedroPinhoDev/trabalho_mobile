@@ -1,7 +1,10 @@
+package com.example.trabalho
+
 import android.os.Parcel
 import android.os.Parcelable
 
 data class ProdutoPedido(
+    val id: Long,              // <-- novo campo!
     val imagemResId: Int,
     val descricao: String,
     val preco: Double,
@@ -10,14 +13,16 @@ data class ProdutoPedido(
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        imagemResId = parcel.readInt(),
-        descricao = parcel.readString() ?: "",
-        preco = parcel.readDouble(),
-        detalhes = parcel.readString() ?: "",
-        selecionado = parcel.readByte() != 0.toByte()
+        id           = parcel.readLong(),
+        imagemResId  = parcel.readInt(),
+        descricao    = parcel.readString() ?: "",
+        preco        = parcel.readDouble(),
+        detalhes     = parcel.readString() ?: "",
+        selecionado  = parcel.readByte() != 0.toByte()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
         parcel.writeInt(imagemResId)
         parcel.writeString(descricao)
         parcel.writeDouble(preco)
@@ -25,17 +30,12 @@ data class ProdutoPedido(
         parcel.writeByte(if (selecionado) 1 else 0)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<ProdutoPedido> {
-        override fun createFromParcel(parcel: Parcel): ProdutoPedido {
-            return ProdutoPedido(parcel)
-        }
-
-        override fun newArray(size: Int): Array<ProdutoPedido?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel): ProdutoPedido =
+            ProdutoPedido(parcel)
+        override fun newArray(size: Int): Array<ProdutoPedido?> =
+            arrayOfNulls(size)
     }
 }
