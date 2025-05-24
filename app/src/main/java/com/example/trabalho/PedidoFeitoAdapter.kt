@@ -1,6 +1,5 @@
 package com.example.trabalho
 
-import ProdutoPedido
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
 
 class PedidoFeitoAdapter(
-    private val listaPedidos: ArrayList<Pedido>,
+    private val listaPedidos: List<Pedido>,
     private val clickListener: (Pedido, Int) -> Unit
 ) : RecyclerView.Adapter<PedidoFeitoAdapter.PedidoFeitoViewHolder>() {
 
@@ -41,15 +40,12 @@ class PedidoFeitoAdapter(
 
         holder.codigoPedido.text = pedido.codigo
         holder.valorPedido.text = "R$ %.2f".format(pedido.total)
-        when (pedido.status) {
+        when (pedido.status.lowercase()) {
             "aberto" -> holder.statusIndicator.setBackgroundColor(Color.GRAY)
             "fechado" -> holder.statusIndicator.setBackgroundColor(Color.GREEN)
             "cancelado" -> holder.statusIndicator.setBackgroundColor(Color.RED)
         }
-
     }
 
     override fun getItemCount(): Int = listaPedidos.size
 }
-
-

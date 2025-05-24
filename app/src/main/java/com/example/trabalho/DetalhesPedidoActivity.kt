@@ -1,86 +1,64 @@
 package com.example.trabalho
 
-import Produto
-import ProdutoPedido
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.PopupMenu
+import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.trabalho.R
+import com.example.trabalho.utils.toPedido
+import kotlinx.coroutines.launch
 
 class DetalhesPedidoActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_PEDIDO_ID = "pedidoId"
+    }
+
+    private val TAG = "DetalhesPedido"
+    private var pedidoId: Long = -1
+    private lateinit var recyclerView: RecyclerView
+    // adapter, views etc.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detalhes_pedidos)
 
-        val codigoPedido = intent.getStringExtra("codigo") ?: "Pedido"
-        val pedidoJson = intent.getStringExtra("pedidoSelecionado")
-        val pedido = Gson().fromJson(pedidoJson, Pedido::class.java)
-        val produtos = pedido.produtos
+        val pedidoId = intent.getLongExtra(EXTRA_PEDIDO_ID, -1L)
+        if (pedidoId < 0) {
+            Toast.makeText(this, "ID de pedido inválido", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
-        val titulo = findViewById<TextView>(R.id.textCodigoPedido)
-        titulo.text = codigoPedido
-
-        // Configura o RecyclerView para exibir a lista de produtos
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewProdutos)
+        recyclerView = findViewById(R.id.recyclerViewProdutos)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ProdutoDetalheAdapter(produtos)
 
-        // Calcula o valor total
-        val total = produtos.sumOf { it.preco }
-
-        // Exibe o valor total formatado
-        val totalView = findViewById<TextView>(R.id.textTotal)
-        totalView.text = "R$ %.2f".format(total)
-
-        val statusButton = findViewById<Button>(R.id.botaoStatus)
-        statusButton.setOnClickListener {
-            // Criar o PopupMenu
-            val popupMenu = PopupMenu(this, it)
-            menuInflater.inflate(R.menu.status_menu, popupMenu.menu)  // Referência do menu XML
-
-            // Mostrar o menu
-            popupMenu.show()
-
-            // Lidar com as opções do menu
-            popupMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.statusAberto -> {
-                        // Alterar status para "Aberto"
-                        alterarStatus(pedido, "aberto")
-                        true
-                    }
-                    R.id.statusFechado -> {
-                        // Alterar status para "Fechado"
-                        alterarStatus(pedido, "fechado")
-                        true
-                    }
-                    R.id.statusCancelado -> {
-                        // Alterar status para "Cancelado"
-                        alterarStatus(pedido, "cancelado")
-                        true
-                    }
-                    else -> false
-                }
+        lifecycleScope.launch {
+            try {
+                val pedido = PedidoRepository.buscarPedidoPorId(pedidoId)
+                mostraPedido(pedido)
+            } catch (e: Exception) {
+                Log.e(TAG, "Erro ao buscar pedido $pedidoId", e)
+                Toast.makeText(this@DetalhesPedidoActivity,
+                    "Falha ao carregar pedido", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }
 
-    // Função para alterar o status
-    private fun alterarStatus(pedido: Pedido, status: String) {
-        pedido.status = status
-        val intent = Intent()
-        intent.putExtra("pedidoAlterado", Gson().toJson(pedido))
-        setResult(RESULT_OK, intent)
-        finish()
-        // Atualizar o RecyclerView ou fazer outras ações conforme necessário
-        // Por exemplo, atualizar a cor do indicador de status
+
+
+    private fun mostraPedido(pedido: Pedido) {
+        // Preenche título, total, lista de produtos etc.
+        findViewById<TextView>(R.id.textCodigoPedido).text = pedido.codigo
+        // …
+        recyclerView.adapter = ProdutoDetalheAdapter(pedido.produtos)
+        findViewById<TextView>(R.id.textTotal).text = "R$ %.2f".format(pedido.total)
+        // configurar botão de status, menu etc.
     }
 }
-

@@ -1,3 +1,5 @@
+package com.example.trabalho
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +38,6 @@ class PedidoAdapter(
         holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.isChecked = produto.selecionado
 
-        // Atualiza estado ao clicar no checkbox
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onItemCheckedChange(produto, isChecked)
         }

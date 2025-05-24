@@ -1,7 +1,5 @@
 package com.example.trabalho
 
-import Produto
-import ProdutoPedido
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,4 +31,3 @@ class ProdutoDetalheAdapter(private val produtos: List<ProdutoPedido>) :
 
     override fun getItemCount() = produtos.size
 }
-
