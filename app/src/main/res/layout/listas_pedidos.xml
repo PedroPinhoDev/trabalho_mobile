@@ -14,7 +14,7 @@
         android:layout_height="75dp"
         android:background="#1D3557"
         android:gravity="center"
-        android:text="Pedidos Feitos"
+        android:text="Lista de Pedidos"
         android:textColor="#FFFFFF"
         android:textSize="28dp" />
 

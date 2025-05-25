@@ -150,17 +150,19 @@
         android:orientation="horizontal">
 
         <!-- Ícone de Lixeira -->
+
+        <!-- Espaço para empurrar o botão de check para a direita -->
+
         <ImageButton
             android:id="@+id/btnDelete"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_margin="16dp"
+            android:layout_margin="26dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/round_button_red"
             android:contentDescription="Deletar"
-            android:src="@drawable/ic_delete"
-            android:layout_marginEnd="40dp"/>
+            android:src="@drawable/ic_delete" />
 
-        <!-- Espaço para empurrar o botão de check para a direita -->
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -171,10 +173,10 @@
             android:id="@+id/btnSave"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:layout_margin="16dp"
+            android:layout_margin="26dp"
             android:background="@drawable/round_button_green"
             android:contentDescription="Salvar"
-            android:src="@drawable/ic_check"/>
+            android:src="@drawable/ic_check" />
 
     </LinearLayout>
 
