@@ -12,12 +12,12 @@
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="75dp"
         android:background="#1D3557"
         android:gravity="center"
         android:text="Cadastro"
         android:textColor="#FFFFFF"
-        android:textSize="30sp"/>
+        android:textSize="28dp"/>
 
     <!-- Conteúdo com Scroll + FAB flutuando -->
     <FrameLayout
@@ -58,7 +58,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
+            android:layout_margin="26dp"
             android:src="@drawable/ic_add"
             android:contentDescription="Adicionar"
             app:backgroundTint="#F4690C"

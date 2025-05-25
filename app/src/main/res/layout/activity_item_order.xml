@@ -12,12 +12,12 @@
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="75dp"
         android:background="#1D3557"
         android:gravity="center"
         android:text="Pedido"
         android:textColor="#FFFFFF"
-        android:textSize="30sp" />
+        android:textSize="28dp" />
 
     <!-- ScrollView contendo os itens -->
     <androidx.recyclerview.widget.RecyclerView
