@@ -18,7 +18,7 @@
         android:networkSecurityConfig="@xml/network_security_config">
         <activity
 
-            android:name=".MainActivity"
+            android:name=".view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,13 +27,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ItemDetailsActivity"/>
+        <activity android:name=".view.activity.ItemDetailsActivity"/>
 
-        <activity android:name=".ItemOrderActivity" />
+        <activity android:name=".view.activity.ItemOrderActivity" />
 
-        <activity android:name=".ListasPedidosActivity" />
+        <activity android:name=".view.activity.ListasPedidosActivity" />
 
-        <activity android:name=".DetalhesPedidoActivity" />
+        <activity android:name=".view.activity.DetalhesPedidoActivity" />
     </application>
 
 </manifest>

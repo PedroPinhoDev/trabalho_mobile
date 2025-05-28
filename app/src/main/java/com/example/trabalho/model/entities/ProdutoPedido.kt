@@ -1,4 +1,4 @@
-package com.example.trabalho
+package com.example.trabalho.model.entities
 
 import android.os.Parcel
 import android.os.Parcelable

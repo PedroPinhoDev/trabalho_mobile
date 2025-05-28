@@ -1,5 +1,4 @@
-// File: ItemDetailsActivity.kt
-package com.example.trabalho
+package com.example.trabalho.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.trabalho.R
+import com.example.trabalho.model.entities.Produto
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -126,10 +127,10 @@ class ItemDetailsActivity : AppCompatActivity() {
             }
 
             val produto = Produto(
-                id          = produtoId,
-                descricao   = descricao,
-                valor       = valorDouble,
-                detalhes    = detalhes,
+                id = produtoId,
+                descricao = descricao,
+                valor = valorDouble,
+                detalhes = detalhes,
                 imagemResId = selectedImageResId
             )
 

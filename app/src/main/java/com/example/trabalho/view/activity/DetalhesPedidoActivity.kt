@@ -1,6 +1,5 @@
-package com.example.trabalho
+package com.example.trabalho.view.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -10,7 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trabalho.R
-import com.example.trabalho.utils.toPedido
+import com.example.trabalho.model.entities.Pedido
+import com.example.trabalho.repository.PedidoRepository
+import com.example.trabalho.view.adapter.ProdutoDetalheAdapter
 import kotlinx.coroutines.launch
 
 class DetalhesPedidoActivity : AppCompatActivity() {

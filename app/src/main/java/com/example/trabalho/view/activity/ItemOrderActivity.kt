@@ -1,4 +1,4 @@
-package com.example.trabalho
+package com.example.trabalho.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trabalho.view.activity.ListasPedidosActivity
+import com.example.trabalho.repository.PedidoRepository
+import com.example.trabalho.R
+import com.example.trabalho.model.entities.Pedido
+import com.example.trabalho.model.entities.ProdutoPedido
+import com.example.trabalho.view.adapter.PedidoAdapter
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 
@@ -28,7 +34,8 @@ class ItemOrderActivity : AppCompatActivity() {
         val btnConfirmarPedido = findViewById<MaterialButton>(R.id.btnConfirmarPedido)
 
         listaProdutos = intent.getParcelableArrayListExtra("produtos") ?: arrayListOf()
-        adapter = PedidoAdapter(listaProdutos) { produto, isChecked -> produto.selecionado = isChecked }
+        adapter =
+            PedidoAdapter(listaProdutos) { produto, isChecked -> produto.selecionado = isChecked }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         textViewSemPedidos.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE

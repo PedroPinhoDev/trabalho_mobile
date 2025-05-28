@@ -1,4 +1,4 @@
-package com.example.trabalho
+package com.example.trabalho.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trabalho.view.activity.DetalhesPedidoActivity
+import com.example.trabalho.view.activity.MainActivity
+import com.example.trabalho.view.adapter.PedidoFeitoAdapter
+import com.example.trabalho.repository.PedidoRepository
+import com.example.trabalho.R
 import kotlinx.coroutines.launch
 
 class ListasPedidosActivity : AppCompatActivity() {
@@ -26,7 +31,7 @@ class ListasPedidosActivity : AppCompatActivity() {
 
         adapter = PedidoFeitoAdapter(PedidoRepository.pedidos) { pedido, _ ->
             val intent = Intent(this, DetalhesPedidoActivity::class.java)
-            intent.putExtra(DetalhesPedidoActivity.EXTRA_PEDIDO_ID, pedido.id)
+            intent.putExtra(DetalhesPedidoActivity.Companion.EXTRA_PEDIDO_ID, pedido.id)
             startActivity(intent)  // não precisa de startActivityForResult
         }
 

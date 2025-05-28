@@ -1,8 +1,10 @@
-package com.example.trabalho
+package com.example.trabalho.repository
 
+import com.example.trabalho.R
+import com.example.trabalho.model.entities.Pedido
+import com.example.trabalho.model.utils.toNetworkOrderRequest
+import com.example.trabalho.model.utils.toPedido
 import com.example.trabalho.service.ApiClient
-import com.example.trabalho.utils.toNetworkOrderRequest
-import com.example.trabalho.utils.toPedido
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -30,7 +32,7 @@ object PedidoRepository {
     suspend fun criarPedido(pedido: Pedido) = withContext(Dispatchers.IO) {
         val request = pedido.toNetworkOrderRequest()
         val created = apiService.createOrder(request)
-        val codigo  = "P-${created.id}"
+        val codigo = "P-${created.id}"
         val imagens = created.products.map { R.drawable.adicionar_imagem }
         pedidos.add(created.toPedido(codigo, imagens))
     }
@@ -41,7 +43,7 @@ object PedidoRepository {
     suspend fun criarPedidoRetornando(pedido: Pedido): Pedido = withContext(Dispatchers.IO) {
         val request = pedido.toNetworkOrderRequest()
         val created = apiService.createOrder(request)
-        val codigo  = "P-${created.id}"
+        val codigo = "P-${created.id}"
         val imagens = created.products.map { R.drawable.adicionar_imagem }
         val novoPedido = created.toPedido(codigo, imagens)
         pedidos.add(novoPedido)
@@ -56,7 +58,7 @@ object PedidoRepository {
         val updated = apiService.updateOrder(pedido.id!!, request)
         val idx = pedidos.indexOfFirst { it.id == pedido.id }
         if (idx != -1) {
-            val codigo  = "P-${updated.id}"
+            val codigo = "P-${updated.id}"
             val imagens = updated.products.map { R.drawable.adicionar_imagem }
             pedidos[idx] = updated.toPedido(codigo, imagens)
         }
@@ -75,7 +77,7 @@ object PedidoRepository {
      */
     suspend fun buscarPedidoPorId(id: Long): Pedido = withContext(Dispatchers.IO) {
         val networkOrder = apiService.getOrderById(id)
-        val codigo  = "P-$id"
+        val codigo = "P-$id"
         val imagens = networkOrder.products.map { R.drawable.adicionar_imagem }
         networkOrder.toPedido(codigo, imagens)
     }

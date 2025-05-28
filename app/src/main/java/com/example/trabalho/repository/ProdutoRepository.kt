@@ -1,8 +1,10 @@
-package com.example.trabalho
+package com.example.trabalho.repository
 
+import com.example.trabalho.R
+import com.example.trabalho.model.entities.Produto
+import com.example.trabalho.model.utils.toNetworkProduct
+import com.example.trabalho.model.utils.toProduto
 import com.example.trabalho.service.ApiClient
-import com.example.trabalho.utils.toNetworkProduct
-import com.example.trabalho.utils.toProduto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

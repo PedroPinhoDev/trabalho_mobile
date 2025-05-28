@@ -1,4 +1,4 @@
-package com.example.trabalho
+package com.example.trabalho.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trabalho.R
+import com.example.trabalho.model.entities.ProdutoPedido
 
 class ProdutoDetalheAdapter(private val produtos: List<ProdutoPedido>) :
     RecyclerView.Adapter<ProdutoDetalheAdapter.ProdutoViewHolder>() {

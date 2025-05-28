@@ -1,12 +1,14 @@
-package com.example.trabalho
+package com.example.trabalho.view.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trabalho.R
+import com.example.trabalho.model.entities.Pedido
 
 class PedidoFeitoAdapter(
     private val listaPedidos: List<Pedido>,
