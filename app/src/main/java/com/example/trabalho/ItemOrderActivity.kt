@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
-import kotlin.collections.filter
 
 class ItemOrderActivity : AppCompatActivity() {
 
@@ -24,35 +23,29 @@ class ItemOrderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_order)
 
-        val modo = intent.getStringExtra("modo") ?: "pedido"
-
         recyclerView = findViewById(R.id.recyclerViewProdutos)
         val textViewSemPedidos = findViewById<TextView>(R.id.textViewSemPedidos)
         val btnConfirmarPedido = findViewById<MaterialButton>(R.id.btnConfirmarPedido)
 
-        if (modo == "pedido") {
-            listaProdutos = intent.getParcelableArrayListExtra("produtos") ?: arrayListOf()
-            adapter = PedidoAdapter(listaProdutos) { produto, isChecked ->
-                produto.selecionado = isChecked
-            }
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = adapter
-            textViewSemPedidos.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
+        listaProdutos = intent.getParcelableArrayListExtra("produtos") ?: arrayListOf()
+        adapter = PedidoAdapter(listaProdutos) { produto, isChecked -> produto.selecionado = isChecked }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+        textViewSemPedidos.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
 
-            btnConfirmarPedido.setOnClickListener {
-                if (nenhumItemSelecionado()) {
-                    mostrarAlerta("Nenhum item selecionado!")
-                } else {
-                    confirmarPedido()
-                }
+        btnConfirmarPedido.setOnClickListener {
+            if (listaProdutos.none { it.selecionado }) {
+                AlertDialog.Builder(this)
+                    .setMessage("Nenhum item selecionado!")
+                    .setPositiveButton("OK") { dlg, _ -> dlg.dismiss() }
+                    .show()
+            } else {
+                confirmarPedido()
             }
-        } else {
-            btnConfirmarPedido.visibility = View.GONE
-            // Modo histórico será tratado em ListasPedidosActivity
         }
 
         findViewById<ImageView>(R.id.home).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
         findViewById<ImageView>(R.id.historico).setOnClickListener {
             startActivity(Intent(this, ListasPedidosActivity::class.java))
@@ -60,29 +53,21 @@ class ItemOrderActivity : AppCompatActivity() {
     }
 
     private fun confirmarPedido() {
-        val produtosSelecionados = listaProdutos.filter { it.selecionado }
-        if (produtosSelecionados.isNotEmpty()) {
-            val total = produtosSelecionados.sumOf { it.preco }
-            val codigo = "P-${System.currentTimeMillis()}" // Código temporário
-            val pedido = Pedido(codigo = codigo, produtos = produtosSelecionados, total = total)
+        val selecionados = listaProdutos.filter { it.selecionado }
+        val total = selecionados.sumOf { it.preco }
+        val pedido = Pedido(codigo = "", produtos = selecionados, total = total)
 
-            lifecycleScope.launch {
-                PedidoRepository.criarPedido(pedido)
-                mostrarAlerta("Pedido confirmado com sucesso!")
-                listaProdutos.forEach { it.selecionado = false }
-                adapter.notifyDataSetChanged()
-            }
+        lifecycleScope.launch {
+            val newPedido = PedidoRepository.criarPedidoRetornando(pedido)
+            AlertDialog.Builder(this@ItemOrderActivity)
+                .setMessage("Pedido ${newPedido.codigo} confirmado com sucesso!")
+                .setPositiveButton("OK") { dlg, _ -> dlg.dismiss() }
+                .setCancelable(false)
+                .show()
+
+            // Limpa seleção e atualiza lista
+            listaProdutos.forEach { it.selecionado = false }
+            adapter.notifyDataSetChanged()
         }
-    }
-
-    private fun nenhumItemSelecionado(): Boolean {
-        return listaProdutos.none { it.selecionado }
-    }
-
-    private fun mostrarAlerta(mensagem: String) {
-        AlertDialog.Builder(this)
-            .setMessage(mensagem)
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .show()
     }
 }

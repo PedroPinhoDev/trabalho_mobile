@@ -30,11 +30,11 @@ class ItemDetailsActivity : AppCompatActivity() {
         val btnBack            = findViewById<ImageButton>(R.id.btnBack)
         val tituloTextView     = findViewById<TextView>(R.id.titleTextView)
 
-        // Inicializa placeholder
+        // Placeholder inicial
         selectedImageResId = R.drawable.adicionar_imagem
         imageSelectButton.setImageResource(selectedImageResId)
 
-        // Se for edição, carrega dados e imagem
+        // Se for edição
         val produtoEdit = intent.getSerializableExtra("produto") as? Produto
         produtoIndex    = intent.getIntExtra("index", -1)
         if (produtoEdit != null) {
@@ -43,7 +43,6 @@ class ItemDetailsActivity : AppCompatActivity() {
             editDetalhes.setText(produtoEdit.detalhes)
             produtoId = produtoEdit.id
 
-            // Sobrescreve o placeholder pela imagem salva
             selectedImageResId = produtoEdit.imagemResId
             imageSelectButton.setImageResource(selectedImageResId)
 
@@ -74,56 +73,69 @@ class ItemDetailsActivity : AppCompatActivity() {
         // Salvar produto
         btnSave.setOnClickListener {
             val descricao = editDescricao.text.toString().trim()
-            val valor     = editValor.text.toString().trim()
+            val valorText = editValor.text.toString().trim()
             val detalhes  = editDetalhes.text.toString().trim()
 
-            if (descricao.isEmpty() ||
-                valor.isEmpty() ||
-                detalhes.isEmpty() ||
-                selectedImageResId == -1) {
-                Toast.makeText(this,
-                    "Preencha todas as informações do cadastro",
-                    Toast.LENGTH_SHORT).show()
+            // Validações
+            if (descricao.isEmpty() || valorText.isEmpty() || detalhes.isEmpty() || selectedImageResId == -1) {
+                Toast.makeText(this, "Preencha todas as informações do cadastro", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val valorDouble = valorText.toDoubleOrNull()
+            if (valorDouble == null || valorDouble <= 0.0) {
+                Toast.makeText(this, "O valor do produto deve ser maior que zero", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val produto = Produto(
                 id          = produtoId,
                 descricao   = descricao,
-                valor       = valor.toDouble(),
+                valor       = valorDouble,
                 detalhes    = detalhes,
                 imagemResId = selectedImageResId
             )
 
-            setResult(RESULT_OK, Intent().apply {
-                putExtra("produto", produto)
-                putExtra("index", produtoIndex)
-            })
-            finish()
+            // Pop-up de sucesso e só após OK retorna
+            AlertDialog.Builder(this)
+                .setMessage("Produto salvo com sucesso!")
+                .setPositiveButton("OK") { dialog, _ ->
+                    dialog.dismiss()
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra("produto", produto)
+                        putExtra("index", produtoIndex)
+                    })
+                    finish()
+                }
+                .setCancelable(false)
+                .show()
         }
 
-        // **Reimplementa o delete**: envia RESULT_FIRST_USER + index
+        // Excluir produto
         btnDelete.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Excluir produto")
                 .setMessage("Deseja realmente excluir este produto?")
                 .setPositiveButton("Sim") { dialog, _ ->
-                    Intent().also { intent ->
-                        intent.putExtra("index", produtoIndex)
-                        setResult(RESULT_FIRST_USER, intent)
-                    }
                     dialog.dismiss()
-                    finish()
+                    // Pop-up de exclusão
+                    AlertDialog.Builder(this)
+                        .setMessage("Produto deletado com sucesso!")
+                        .setPositiveButton("OK") { dlg, _ ->
+                            dlg.dismiss()
+                            Intent().also { intent ->
+                                intent.putExtra("index", produtoIndex)
+                                setResult(RESULT_FIRST_USER, intent)
+                            }
+                            finish()
+                        }
+                        .setCancelable(false)
+                        .show()
                 }
-                .setNegativeButton("Não") { dialog, _ ->
-                    dialog.dismiss()
-                }
+                .setNegativeButton("Não") { dialog, _ -> dialog.dismiss() }
                 .show()
         }
 
-        // Botão voltar
-        btnBack.setOnClickListener {
-            finish()
-        }
+        // Voltar
+        btnBack.setOnClickListener { finish() }
     }
 }

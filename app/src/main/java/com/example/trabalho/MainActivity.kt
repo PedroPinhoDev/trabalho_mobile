@@ -29,32 +29,26 @@ class MainActivity : AppCompatActivity() {
         val textViewSemProdutos = findViewById<TextView>(R.id.textViewSemProdutos)
 
         fabAdd.setOnClickListener {
-            val intent = Intent(this, ItemDetailsActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_ADD)
+            startActivityForResult(Intent(this, ItemDetailsActivity::class.java), REQUEST_CODE_ADD)
         }
 
-        val iconCarrinho = findViewById<ImageView>(R.id.carrinho)
-        iconCarrinho.setOnClickListener {
-            val listaProdutoPedido = ProdutoRepository.produtos.map { produto ->
+        findViewById<ImageView>(R.id.carrinho).setOnClickListener {
+            val listaPedido = ProdutoRepository.produtos.map { produto ->
                 ProdutoPedido(
-                    id           = produto.id!!,            // ← agora existe
+                    id = produto.id!!,
                     imagemResId = produto.imagemResId,
                     descricao = produto.descricao,
                     preco = produto.valor,
-                    detalhes = produto.detalhes,
-                    selecionado = false
+                    detalhes = produto.detalhes
                 )
             }
             val intent = Intent(this, ItemOrderActivity::class.java)
-            intent.putParcelableArrayListExtra("produtos", ArrayList(listaProdutoPedido))
-            intent.putExtra("modo", "pedido")
+            intent.putParcelableArrayListExtra("produtos", ArrayList(listaPedido))
             startActivity(intent)
         }
 
-        val iconHistorico = findViewById<ImageView>(R.id.historico)
-        iconHistorico.setOnClickListener {
-            val intent = Intent(this, ListasPedidosActivity::class.java)
-            startActivity(intent)
+        findViewById<ImageView>(R.id.historico).setOnClickListener {
+            startActivity(Intent(this, ListasPedidosActivity::class.java))
         }
 
         lifecycleScope.launch {
@@ -66,59 +60,40 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_FIRST_USER) {
-            val index = data?.getIntExtra("index", -1) ?: -1
-            if (index >= 0) {
-                lifecycleScope.launch {
-                    ProdutoRepository.excluirProduto(index)
-                    atualizarLista()
-                }
+        val produto = data?.getSerializableExtra("produto") as? Produto
+        val index    = data?.getIntExtra("index", -1) ?: -1
+
+        if (resultCode == RESULT_OK && produto != null) {
+            lifecycleScope.launch {
+                if (requestCode == REQUEST_CODE_ADD) ProdutoRepository.adicionarProduto(produto)
+                else if (requestCode == REQUEST_CODE_EDIT && index >= 0) ProdutoRepository.atualizarProduto(index, produto)
+                atualizarLista()
             }
-            return
-        }
-
-        if (resultCode == RESULT_OK) {
-            val produto = data?.getSerializableExtra("produto") as? Produto
-            val index = data?.getIntExtra("index", -1) ?: -1
-
-            if (requestCode == REQUEST_CODE_ADD && produto != null) {
-                lifecycleScope.launch {
-                    ProdutoRepository.adicionarProduto(produto)
-                    atualizarLista()
-                }
-            } else if (requestCode == REQUEST_CODE_EDIT && produto != null && index >= 0) {
-                lifecycleScope.launch {
-                    ProdutoRepository.atualizarProduto(index, produto)
-                    atualizarLista()
-                }
+        } else if (resultCode == RESULT_FIRST_USER && index >= 0) {
+            lifecycleScope.launch {
+                ProdutoRepository.excluirProduto(index)
+                atualizarLista()
             }
         }
     }
 
     private fun atualizarLista() {
         listaLayout.removeAllViews()
-        val textViewSemProdutos = findViewById<TextView>(R.id.textViewSemProdutos)
-        if (ProdutoRepository.produtos.isEmpty()) {
-            textViewSemProdutos.visibility = View.VISIBLE
-        } else {
-            textViewSemProdutos.visibility = View.GONE
-            ProdutoRepository.produtos.forEachIndexed { index, produto ->
+        val sem = findViewById<TextView>(R.id.textViewSemProdutos)
+        if (ProdutoRepository.produtos.isEmpty()) sem.visibility = View.VISIBLE
+        else {
+            sem.visibility = View.GONE
+            ProdutoRepository.produtos.forEachIndexed { i, produto ->
                 val card = layoutInflater.inflate(R.layout.item_produto, null)
-                val descricao = card.findViewById<TextView>(R.id.descriptionTextView)
-                val valor = card.findViewById<TextView>(R.id.priceTextView)
-                val detalhes = card.findViewById<TextView>(R.id.detailsTextView)
-                val imagem = card.findViewById<ImageView>(R.id.itemImageView)
-
-                descricao.text = produto.descricao
-                valor.text = "R$ %.2f".format(produto.valor)
-                detalhes.text = produto.detalhes
-                imagem.setImageResource(produto.imagemResId)
-
+                card.findViewById<TextView>(R.id.descriptionTextView).text = produto.descricao
+                card.findViewById<TextView>(R.id.priceTextView).text = "R$ %.2f".format(produto.valor)
+                card.findViewById<TextView>(R.id.detailsTextView).text = produto.detalhes
+                card.findViewById<ImageView>(R.id.itemImageView).setImageResource(produto.imagemResId)
                 card.setOnClickListener {
-                    val intent = Intent(this, ItemDetailsActivity::class.java)
-                    intent.putExtra("produto", produto)
-                    intent.putExtra("index", index)
-                    startActivityForResult(intent, REQUEST_CODE_EDIT)
+                    val it = Intent(this, ItemDetailsActivity::class.java)
+                    it.putExtra("produto", produto)
+                    it.putExtra("index", i)
+                    startActivityForResult(it, REQUEST_CODE_EDIT)
                 }
                 listaLayout.addView(card)
             }
