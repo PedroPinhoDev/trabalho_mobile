@@ -1,7 +1,10 @@
+// File: ItemDetailsActivity.kt
 package com.example.trabalho
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
@@ -10,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import java.text.NumberFormat
+import java.util.Locale
 
 class ItemDetailsActivity : AppCompatActivity() {
 
@@ -22,24 +27,55 @@ class ItemDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_item_details)
 
         val imageSelectButton = findViewById<ImageView>(R.id.imageSelectButton)
-        val editDescricao      = findViewById<EditText>(R.id.editDescricao)
-        val editValor          = findViewById<EditText>(R.id.editValor)
-        val editDetalhes       = findViewById<EditText>(R.id.editDetalhes)
-        val btnSave            = findViewById<ImageButton>(R.id.btnSave)
-        val btnDelete          = findViewById<ImageButton>(R.id.btnDelete)
-        val btnBack            = findViewById<ImageButton>(R.id.btnBack)
-        val tituloTextView     = findViewById<TextView>(R.id.titleTextView)
+        val editDescricao     = findViewById<EditText>(R.id.editDescricao)
+        val editValor         = findViewById<EditText>(R.id.editValor)
+        val editDetalhes      = findViewById<EditText>(R.id.editDetalhes)
+        val btnSave           = findViewById<ImageButton>(R.id.btnSave)
+        val btnDelete         = findViewById<ImageButton>(R.id.btnDelete)
+        val btnBack           = findViewById<ImageButton>(R.id.btnBack)
+        val tituloTextView    = findViewById<TextView>(R.id.titleTextView)
+
+        // Formatação de moeda brasileira em tempo real
+        val localeBR = Locale("pt", "BR")
+        val currencyFormat = NumberFormat.getCurrencyInstance(localeBR)
+        var current = ""
+
+        editValor.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (s == null || s.toString() == current) return
+                editValor.removeTextChangedListener(this)
+
+                // Remove tudo que não for dígito
+                val cleanString = s.toString().replace(Regex("\\D"), "")
+                if (cleanString.isNotEmpty()) {
+                    val parsed = cleanString.toDouble()
+                    val formatted = currencyFormat.format(parsed / 100)
+                    current = formatted
+                    editValor.setText(formatted)
+                    editValor.setSelection(formatted.length)
+                } else {
+                    current = ""
+                    editValor.setText("")
+                }
+
+                editValor.addTextChangedListener(this)
+            }
+        })
 
         // Placeholder inicial
         selectedImageResId = R.drawable.adicionar_imagem
         imageSelectButton.setImageResource(selectedImageResId)
 
-        // Se for edição
+        // Se for edição, carrega dados e formata valor
         val produtoEdit = intent.getSerializableExtra("produto") as? Produto
         produtoIndex    = intent.getIntExtra("index", -1)
         if (produtoEdit != null) {
             editDescricao.setText(produtoEdit.descricao)
-            editValor.setText(String.format("%.2f", produtoEdit.valor))
+            val formatted = currencyFormat.format(produtoEdit.valor)
+            current = formatted
+            editValor.setText(formatted)
             editDetalhes.setText(produtoEdit.detalhes)
             produtoId = produtoEdit.id
 
@@ -81,7 +117,9 @@ class ItemDetailsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Preencha todas as informações do cadastro", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val valorDouble = valorText.toDoubleOrNull()
+            // Converte valor formatado em número
+            val raw = valorText.replace(Regex("[R\$\\s.]"), "").replace(",", ".")
+            val valorDouble = raw.toDoubleOrNull()
             if (valorDouble == null || valorDouble <= 0.0) {
                 Toast.makeText(this, "O valor do produto deve ser maior que zero", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -95,7 +133,7 @@ class ItemDetailsActivity : AppCompatActivity() {
                 imagemResId = selectedImageResId
             )
 
-            // Pop-up de sucesso e só após OK retorna
+            // Pop-up de sucesso bloqueando até OK
             AlertDialog.Builder(this)
                 .setMessage("Produto salvo com sucesso!")
                 .setPositiveButton("OK") { dialog, _ ->
@@ -117,7 +155,6 @@ class ItemDetailsActivity : AppCompatActivity() {
                 .setMessage("Deseja realmente excluir este produto?")
                 .setPositiveButton("Sim") { dialog, _ ->
                     dialog.dismiss()
-                    // Pop-up de exclusão
                     AlertDialog.Builder(this)
                         .setMessage("Produto deletado com sucesso!")
                         .setPositiveButton("OK") { dlg, _ ->
