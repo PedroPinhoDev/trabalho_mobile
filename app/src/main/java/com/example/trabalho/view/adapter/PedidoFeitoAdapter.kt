@@ -1,6 +1,8 @@
 package com.example.trabalho.view.adapter
 
+import android.R.attr.background
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,10 +21,9 @@ class PedidoFeitoAdapter(
         val statusIndicator: View = view.findViewById(R.id.statusIndicator)
         val codigoPedido: TextView = view.findViewById(R.id.codigoPedido)
         val valorPedido: TextView = view.findViewById(R.id.valorPedido)
-        val setaIndicativa: ImageView = view.findViewById(R.id.setaIndicativa)
 
         init {
-            setaIndicativa.setOnClickListener {
+            itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     clickListener(listaPedidos[position], position)
@@ -42,11 +43,21 @@ class PedidoFeitoAdapter(
 
         holder.codigoPedido.text = pedido.codigo
         holder.valorPedido.text = "R$ %.2f".format(pedido.total)
-        when (pedido.status.lowercase()) {
-            "aberto" -> holder.statusIndicator.setBackgroundColor(Color.GRAY)
-            "fechado" -> holder.statusIndicator.setBackgroundColor(Color.GREEN)
-            "cancelado" -> holder.statusIndicator.setBackgroundColor(Color.RED)
+        val cor = when (pedido.status.lowercase()) {
+            "aberto" -> Color.GRAY
+            "fechado" -> Color.GREEN
+            "cancelado" -> Color.RED
+            else -> Color.GRAY
         }
+
+        // Cria um drawable circular com a cor correta e aplica como fundo
+        val circleDrawable = GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(cor)
+            // Opcional: tamanho em pixels, converta dp para px se quiser
+            // setSize(20, 20)
+        }
+        holder.statusIndicator.background = circleDrawable
     }
 
     override fun getItemCount(): Int = listaPedidos.size
