@@ -1,5 +1,6 @@
-package com.example.trabalho
+package com.example.trabalho.model.entities
 
+import com.example.trabalho.model.entities.ProdutoPedido
 import java.io.Serializable
 
 data class Pedido(

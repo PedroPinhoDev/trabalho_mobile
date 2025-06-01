@@ -1,8 +1,8 @@
-package com.example.trabalho.utils
+package com.example.trabalho.model.utils
 
-import com.example.trabalho.Produto
-import com.example.trabalho.ProdutoPedido
-import com.example.trabalho.Pedido
+import com.example.trabalho.model.entities.Produto
+import com.example.trabalho.model.entities.ProdutoPedido
+import com.example.trabalho.model.entities.Pedido
 import com.example.trabalho.R
 import com.example.trabalho.model.network.NetworkProduct
 import com.example.trabalho.model.network.NetworkOrder
