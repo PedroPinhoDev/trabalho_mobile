@@ -4,17 +4,31 @@
     android:orientation="vertical"
     android:background="#F5F5F5">
 
-    <!-- Título do Pedido -->
-    <TextView
-        android:id="@+id/textCodigoPedido"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:text="P-01"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:background="#1D3557"
-        android:textColor="#FFFFFF"
-        android:padding="10dp" />
+        android:background="#1D3557">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Voltar" />
+
+        <TextView
+            android:id="@+id/textCodigoPedido"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="P-01"
+            android:textColor="#FFFFFF"
+            android:textSize="28dp"/>
+    </FrameLayout>
 
     <!-- Lista de Produtos -->
     <androidx.recyclerview.widget.RecyclerView

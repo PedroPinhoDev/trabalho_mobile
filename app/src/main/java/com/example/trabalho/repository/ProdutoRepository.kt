@@ -12,7 +12,7 @@ object ProdutoRepository {
     private val apiService = ApiClient.apiService
 
     // Guarda o placeholder ou a escolha do usuário por ID
-    private val imageMap = mutableMapOf<Long, Int>()
+    internal val imageMap = mutableMapOf<Long, Int>()
     val produtos = mutableListOf<Produto>()
 
     /** Carrega todos os produtos do servidor, reaproveitando imagens locais */

@@ -1,8 +1,10 @@
 package com.example.trabalho.view.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,9 +28,11 @@ class DetalhesPedidoActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     // adapter, views etc.
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.detalhes_pedidos)
+
 
         val pedidoId = intent.getLongExtra(EXTRA_PEDIDO_ID, -1L)
         if (pedidoId < 0) {
@@ -51,6 +55,9 @@ class DetalhesPedidoActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        val btnBack = findViewById<ImageButton>(R.id.btnBack)
+        btnBack.setOnClickListener { finish() }
     }
 
 

@@ -52,7 +52,7 @@ class ItemOrderActivity : AppCompatActivity() {
         }
 
         findViewById<ImageView>(R.id.home).setOnClickListener {
-            finish()
+            startActivity(Intent(this, MainActivity::class.java))
         }
         findViewById<ImageView>(R.id.historico).setOnClickListener {
             startActivity(Intent(this, ListasPedidosActivity::class.java))
