@@ -2,9 +2,9 @@ package com.example.trabalho.repository
 
 import com.example.trabalho.R
 import com.example.trabalho.model.entities.Pedido
+import com.example.trabalho.model.entities.ProdutoPedido
+import com.example.trabalho.model.network.NetworkOrderRequest
 import com.example.trabalho.model.utils.toNetworkOrderRequest
-import com.example.trabalho.model.utils.toPedido
-import com.example.trabalho.repository.ProdutoRepository
 import com.example.trabalho.service.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,59 +16,114 @@ object PedidoRepository {
 
     /**
      * Carrega todos os pedidos, usando o ID de cada pedido como código.
-     * Agora mapeia cada produto ao seu imagemResId armazenado em ProdutoRepository.imageMap.
+     * Agora preenche cada ProdutoPedido com imagePath ou imagemResId.
      */
     suspend fun carregarPedidos() = withContext(Dispatchers.IO) {
         pedidos.clear()
         val networkOrders = apiService.getOrders()
         networkOrders.forEach { order ->
             val codigo = "P-${order.id}"
-            val imagens = order.products.map { np ->
-                np.id?.let { pid ->
+            // Mapeia cada produto da ordem
+            val listaProdutosPedido = order.products.map { np ->
+                val pid = np.id ?: throw IllegalArgumentException("NetworkProduct.id é nulo")
+                // tenta o path salvo; senão, recurso interno
+                val path = ProdutoRepository.imagePathMap[pid]
+                val resId = if (path != null) {
+                    // se veio da galeria, usamos placeholder no resId
+                    R.drawable.adicionar_imagem
+                } else {
+                    // senão, reutiliza o recurso salvo (ou placeholder)
                     ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
-                } ?: R.drawable.adicionar_imagem
+                }
+                ProdutoPedido(
+                    id          = pid,
+                    imagePath   = path,
+                    imagemResId = resId,
+                    descricao   = np.name,
+                    preco       = np.price,
+                    detalhes    = np.description,
+                    selecionado = false
+                )
             }
-            pedidos.add(order.toPedido(codigo, imagens))
+            val total = listaProdutosPedido.sumOf { it.preco }
+            pedidos.add(Pedido(
+                id      = order.id,
+                codigo  = codigo,
+                produtos= listaProdutosPedido,
+                total   = total,
+                status  = order.status
+            ))
         }
     }
 
     /**
-     * Cria um pedido no backend e adiciona à lista, usando o ID retornado como código.
-     * Também tenta recuperar a imagem de cada produto pelo imageMap.
+     * Cria um pedido no backend e adiciona à lista, preenchendo imagePath/resId
      */
     suspend fun criarPedido(pedido: Pedido) = withContext(Dispatchers.IO) {
         val request = pedido.toNetworkOrderRequest()
         val created = apiService.createOrder(request)
         val codigo = "P-${created.id}"
-        val imagens = created.products.map { np ->
-            np.id?.let { pid ->
-                ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
-            } ?: R.drawable.adicionar_imagem
+        val listaProdutosPedido = created.products.map { np ->
+            val pid = np.id ?: throw IllegalArgumentException("NetworkProduct.id é nulo")
+            val path = ProdutoRepository.imagePathMap[pid]
+            val resId = if (path != null) R.drawable.adicionar_imagem
+            else ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
+            ProdutoPedido(
+                id          = pid,
+                imagePath   = path,
+                imagemResId = resId,
+                descricao   = np.name,
+                preco       = np.price,
+                detalhes    = np.description,
+                selecionado = false
+            )
         }
-        pedidos.add(created.toPedido(codigo, imagens))
+        val total = listaProdutosPedido.sumOf { it.preco }
+        pedidos.add(Pedido(
+            id      = created.id,
+            codigo  = codigo,
+            produtos= listaProdutosPedido,
+            total   = total,
+            status  = created.status
+        ))
     }
 
     /**
-     * Cria um pedido e retorna o objeto Pedido resultante, com código baseado no ID.
-     * Inclui o mapeamento de imagem via imageMap.
+     * Cria um pedido e retorna o objeto Pedido resultante, com imagePath/resId
      */
     suspend fun criarPedidoRetornando(pedido: Pedido): Pedido = withContext(Dispatchers.IO) {
         val request = pedido.toNetworkOrderRequest()
         val created = apiService.createOrder(request)
         val codigo = "P-${created.id}"
-        val imagens = created.products.map { np ->
-            np.id?.let { pid ->
-                ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
-            } ?: R.drawable.adicionar_imagem
+        val listaProdutosPedido = created.products.map { np ->
+            val pid = np.id ?: throw IllegalArgumentException("NetworkProduct.id é nulo")
+            val path = ProdutoRepository.imagePathMap[pid]
+            val resId = if (path != null) R.drawable.adicionar_imagem
+            else ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
+            ProdutoPedido(
+                id          = pid,
+                imagePath   = path,
+                imagemResId = resId,
+                descricao   = np.name,
+                preco       = np.price,
+                detalhes    = np.description,
+                selecionado = false
+            )
         }
-        val novoPedido = created.toPedido(codigo, imagens)
+        val total = listaProdutosPedido.sumOf { it.preco }
+        val novoPedido = Pedido(
+            id      = created.id,
+            codigo  = codigo,
+            produtos= listaProdutosPedido,
+            total   = total,
+            status  = created.status
+        )
         pedidos.add(novoPedido)
         novoPedido
     }
 
     /**
-     * Atualiza um pedido existente, usando o mesmo ID como código.
-     * Atualiza também a lista local de pedidos com o imagemResId correto.
+     * Atualiza um pedido existente e sua imagem, se houver
      */
     suspend fun atualizarPedido(pedido: Pedido) = withContext(Dispatchers.IO) {
         val request = pedido.toNetworkOrderRequest()
@@ -76,35 +131,59 @@ object PedidoRepository {
         val idx = pedidos.indexOfFirst { it.id == pedido.id }
         if (idx != -1) {
             val codigo = "P-${updated.id}"
-            val imagens = updated.products.map { np ->
-                np.id?.let { pid ->
-                    ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
-                } ?: R.drawable.adicionar_imagem
+            val listaProdutosPedido = updated.products.map { np ->
+                val pid = np.id ?: throw IllegalArgumentException("NetworkProduct.id é nulo")
+                val path = ProdutoRepository.imagePathMap[pid]
+                val resId = if (path != null) R.drawable.adicionar_imagem
+                else ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
+                ProdutoPedido(
+                    id          = pid,
+                    imagePath   = path,
+                    imagemResId = resId,
+                    descricao   = np.name,
+                    preco       = np.price,
+                    detalhes    = np.description,
+                    selecionado = false
+                )
             }
-            pedidos[idx] = updated.toPedido(codigo, imagens)
+            val total = listaProdutosPedido.sumOf { it.preco }
+            pedidos[idx] = Pedido(
+                id      = updated.id,
+                codigo  = codigo,
+                produtos= listaProdutosPedido,
+                total   = total,
+                status  = updated.status
+            )
         }
     }
 
     /**
-     * Exclui um pedido (implementação opcional dependendo da API).
+     * Exclui um pedido (não implementado no backend)
      */
-    suspend fun excluirPedido(index: Int): Boolean {
-        // TODO: implementar exclusão no backend se necessário
-        return false
-    }
+    suspend fun excluirPedido(index: Int): Boolean = false
 
     /**
-     * Obtém um pedido específico pelo ID, usando ID como código.
-     * Agora recupera cada imagem de produto pelo imageMap.
+     * Busca um pedido específico pelo ID, preenchendo imagePath/resId
      */
     suspend fun buscarPedidoPorId(id: Long): Pedido = withContext(Dispatchers.IO) {
         val networkOrder = apiService.getOrderById(id)
         val codigo = "P-$id"
-        val imagens = networkOrder.products.map { np ->
-            np.id?.let { pid ->
-                ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
-            } ?: R.drawable.adicionar_imagem
+        val listaProdutosPedido = networkOrder.products.map { np ->
+            val pid = np.id ?: throw IllegalArgumentException("NetworkProduct.id é nulo")
+            val path = ProdutoRepository.imagePathMap[pid]
+            val resId = if (path != null) R.drawable.adicionar_imagem
+            else ProdutoRepository.imageMap[pid] ?: R.drawable.adicionar_imagem
+            ProdutoPedido(
+                id          = pid,
+                imagePath   = path,
+                imagemResId = resId,
+                descricao   = np.name,
+                preco       = np.price,
+                detalhes    = np.description,
+                selecionado = false
+            )
         }
-        networkOrder.toPedido(codigo, imagens)
+        val total = listaProdutosPedido.sumOf { it.preco }
+        Pedido(id = id, codigo = codigo, produtos = listaProdutosPedido, total = total, status = networkOrder.status)
     }
 }

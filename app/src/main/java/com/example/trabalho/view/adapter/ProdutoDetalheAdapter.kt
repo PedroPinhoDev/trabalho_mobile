@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trabalho.R
 import com.example.trabalho.model.entities.ProdutoPedido
 
-class ProdutoDetalheAdapter(private val produtos: List<ProdutoPedido>) :
-    RecyclerView.Adapter<ProdutoDetalheAdapter.ProdutoViewHolder>() {
+class ProdutoDetalheAdapter(
+    private val produtos: List<ProdutoPedido>
+) : RecyclerView.Adapter<ProdutoDetalheAdapter.ProdutoViewHolder>() {
 
     inner class ProdutoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nome: TextView = view.findViewById(R.id.nomeProduto)
-        val preco: TextView = view.findViewById(R.id.precoProduto)
-        val imagem: ImageView = view.findViewById(R.id.imagemProduto)
+        val nome: TextView   = view.findViewById(R.id.nomeProduto)
+        val preco: TextView  = view.findViewById(R.id.precoProduto)
+        val imagem: ImageView= view.findViewById(R.id.imagemProduto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
@@ -27,10 +28,17 @@ class ProdutoDetalheAdapter(private val produtos: List<ProdutoPedido>) :
 
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
         val produto = produtos[position]
-        holder.nome.text = produto.descricao
+
+        holder.nome.text  = produto.descricao
         holder.preco.text = "R$ %.2f".format(produto.preco)
-        holder.imagem.setImageResource(produto.imagemResId)
+
+        // **Aqui também**: se vier path, carrega URI; senão o resource
+        if (produto.imagePath != null) {
+            holder.imagem.setImageURI(Uri.parse(produto.imagePath))
+        } else {
+            holder.imagem.setImageResource(produto.imagemResId)
+        }
     }
 
-    override fun getItemCount() = produtos.size
+    override fun getItemCount(): Int = produtos.size
 }

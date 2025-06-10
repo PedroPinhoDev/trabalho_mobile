@@ -1,5 +1,6 @@
 package com.example.trabalho.view.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +17,11 @@ class PedidoAdapter(
 ) : RecyclerView.Adapter<PedidoAdapter.ProdutoViewHolder>() {
 
     inner class ProdutoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imagem: ImageView = view.findViewById(R.id.itemImageView)
-        val descricao: TextView = view.findViewById(R.id.descriptionTextView)
-        val preco: TextView = view.findViewById(R.id.priceTextView)
-        val detalhes: TextView = view.findViewById(R.id.detailsTextView)
-        val checkBox: CheckBox = view.findViewById(R.id.itemCheckBox)
+        val imagem: ImageView    = view.findViewById(R.id.itemImageView)
+        val descricao: TextView  = view.findViewById(R.id.descriptionTextView)
+        val preco: TextView      = view.findViewById(R.id.priceTextView)
+        val detalhes: TextView   = view.findViewById(R.id.detailsTextView)
+        val checkBox: CheckBox   = view.findViewById(R.id.itemCheckBox)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
@@ -32,19 +33,23 @@ class PedidoAdapter(
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
         val produto = listaProdutos[position]
 
-        holder.imagem.setImageResource(produto.imagemResId)
+        // **Aqui**: prioriza a URI (galeria), senão recurso interno
+        if (produto.imagePath != null) {
+            holder.imagem.setImageURI(Uri.parse(produto.imagePath))
+        } else {
+            holder.imagem.setImageResource(produto.imagemResId)
+        }
+
         holder.descricao.text = produto.descricao
-        holder.preco.text = "R$ %.2f".format(produto.preco)
-        holder.detalhes.text = produto.detalhes
+        holder.preco.text     = "R$ %.2f".format(produto.preco)
+        holder.detalhes.text  = produto.detalhes
+
         holder.checkBox.setOnCheckedChangeListener(null)
         holder.checkBox.isChecked = produto.selecionado
-
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             onItemCheckedChange(produto, isChecked)
         }
     }
 
     override fun getItemCount(): Int = listaProdutos.size
-
-    fun getProdutos(): List<ProdutoPedido> = listaProdutos
 }

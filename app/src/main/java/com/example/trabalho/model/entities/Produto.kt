@@ -7,5 +7,7 @@ data class Produto(
     val descricao: String,
     val valor: Double,
     val detalhes: String,
+    val imagePath: String? = null,
     val imagemResId: Int
 ) : Serializable
+
