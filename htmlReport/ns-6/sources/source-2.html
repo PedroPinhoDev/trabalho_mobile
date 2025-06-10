@@ -1,0 +1,147 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OrderUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: OrderUtils (com.example.trabalho.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OrderUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92,3%
+  </span>
+  <span class="absValue">
+    (12/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.utils
+&nbsp;
+&nbsp;import com.example.trabalho.model.entities.Pedido
+&nbsp;import com.example.trabalho.model.entities.ProdutoPedido
+&nbsp;
+&nbsp;object OrderUtils {
+&nbsp;
+&nbsp;    fun validateSelectedProducts(produtos: List&lt;ProdutoPedido&gt;): String? {
+<b class="fc">&nbsp;        return if (produtos.none { it.selecionado }) {</b>
+<b class="fc">&nbsp;            &quot;Nenhum item selecionado&quot;</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            null</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    fun createOrder(produtos: List&lt;ProdutoPedido&gt;, codigo: String = &quot;&quot;): Pedido {</b>
+<b class="fc">&nbsp;        val selecionados = produtos.filter { it.selecionado }</b>
+<b class="fc">&nbsp;        val total = selecionados.sumOf { it.preco }</b>
+<b class="fc">&nbsp;        return Pedido(</b>
+<b class="fc">&nbsp;            id = null,</b>
+<b class="fc">&nbsp;            codigo = codigo,</b>
+<b class="fc">&nbsp;            produtos = selecionados,</b>
+<b class="fc">&nbsp;            total = total,</b>
+<b class="fc">&nbsp;            status = &quot;Aberto&quot;</b>
+&nbsp;        )
+&nbsp;    }
+&nbsp;
+&nbsp;    fun clearSelection(produtos: MutableList&lt;ProdutoPedido&gt;) {
+<b class="fc">&nbsp;        produtos.forEach { it.selecionado = false }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

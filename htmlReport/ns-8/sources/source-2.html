@@ -1,0 +1,222 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PedidoFeitoAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.view.adapter</a>
+</div>
+
+<h1>Coverage Summary for Class: PedidoFeitoAdapter (com.example.trabalho.view.adapter)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PedidoFeitoAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PedidoFeitoAdapter$PedidoFeitoViewHolder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.view.adapter
+&nbsp;
+&nbsp;import android.R.attr.background
+&nbsp;import android.graphics.Color
+&nbsp;import android.graphics.drawable.GradientDrawable
+&nbsp;import android.view.LayoutInflater
+&nbsp;import android.view.View
+&nbsp;import android.view.ViewGroup
+&nbsp;import android.widget.ImageView
+&nbsp;import android.widget.TextView
+&nbsp;import androidx.recyclerview.widget.RecyclerView
+&nbsp;import com.example.trabalho.R
+&nbsp;import com.example.trabalho.model.entities.Pedido
+&nbsp;
+&nbsp;class PedidoFeitoAdapter(
+<b class="nc">&nbsp;    private val listaPedidos: List&lt;Pedido&gt;,</b>
+<b class="nc">&nbsp;    private val clickListener: (Pedido, Int) -&gt; Unit</b>
+<b class="nc">&nbsp;) : RecyclerView.Adapter&lt;PedidoFeitoAdapter.PedidoFeitoViewHolder&gt;() {</b>
+&nbsp;
+<b class="nc">&nbsp;    inner class PedidoFeitoViewHolder(view: View) : RecyclerView.ViewHolder(view) {</b>
+<b class="nc">&nbsp;        val statusIndicator: View = view.findViewById(R.id.statusIndicator)</b>
+<b class="nc">&nbsp;        val codigoPedido: TextView = view.findViewById(R.id.codigoPedido)</b>
+<b class="nc">&nbsp;        val valorPedido: TextView = view.findViewById(R.id.valorPedido)</b>
+&nbsp;
+<b class="nc">&nbsp;        init {</b>
+<b class="nc">&nbsp;            itemView.setOnClickListener {</b>
+<b class="nc">&nbsp;                val position = adapterPosition</b>
+<b class="nc">&nbsp;                if (position != RecyclerView.NO_POSITION) {</b>
+<b class="nc">&nbsp;                    clickListener(listaPedidos[position], position)</b>
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoFeitoViewHolder {
+<b class="nc">&nbsp;        val view = LayoutInflater.from(parent.context)</b>
+<b class="nc">&nbsp;            .inflate(R.layout.item_pedido_feito, parent, false)</b>
+<b class="nc">&nbsp;        return PedidoFeitoViewHolder(view)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    override fun onBindViewHolder(holder: PedidoFeitoViewHolder, position: Int) {
+<b class="nc">&nbsp;        val pedido = listaPedidos[position]</b>
+&nbsp;
+<b class="nc">&nbsp;        holder.codigoPedido.text = pedido.codigo</b>
+<b class="nc">&nbsp;        holder.valorPedido.text = &quot;R$ %.2f&quot;.format(pedido.total)</b>
+<b class="nc">&nbsp;        val cor = when (pedido.status.lowercase()) {</b>
+<b class="nc">&nbsp;            &quot;aberto&quot; -&gt; Color.GRAY</b>
+<b class="nc">&nbsp;            &quot;fechado&quot; -&gt; Color.GREEN</b>
+<b class="nc">&nbsp;            &quot;cancelado&quot; -&gt; Color.RED</b>
+<b class="nc">&nbsp;            else -&gt; Color.GRAY</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Cria um drawable circular com a cor correta e aplica como fundo
+<b class="nc">&nbsp;        val circleDrawable = GradientDrawable().apply {</b>
+<b class="nc">&nbsp;            shape = GradientDrawable.OVAL</b>
+<b class="nc">&nbsp;            setColor(cor)</b>
+&nbsp;            // Opcional: tamanho em pixels, converta dp para px se quiser
+&nbsp;            // setSize(20, 20)
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        holder.statusIndicator.background = circleDrawable</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    override fun getItemCount(): Int = listaPedidos.size</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

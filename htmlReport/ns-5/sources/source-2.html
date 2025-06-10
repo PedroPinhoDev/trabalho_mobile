@@ -1,0 +1,108 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ApiService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ApiService (com.example.trabalho.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ApiService</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.service
+&nbsp;
+&nbsp;import com.example.trabalho.model.network.NetworkOrder
+&nbsp;import com.example.trabalho.model.network.NetworkOrderRequest
+&nbsp;import com.example.trabalho.model.network.NetworkProduct
+&nbsp;import retrofit2.Response
+&nbsp;import retrofit2.http.*
+&nbsp;
+&nbsp;interface ApiService {
+&nbsp;    @GET(&quot;products&quot;)
+&nbsp;    suspend fun getProducts(): List&lt;NetworkProduct&gt;
+&nbsp;
+&nbsp;    @GET(&quot;orders&quot;)
+&nbsp;    suspend fun getOrders(): List&lt;NetworkOrder&gt;
+&nbsp;
+&nbsp;    // *** NOVO: buscar um pedido específico ***
+&nbsp;    @GET(&quot;orders/{id}&quot;)
+&nbsp;    suspend fun getOrderById(@Path(&quot;id&quot;) id: Long): NetworkOrder
+&nbsp;
+&nbsp;    @POST(&quot;products&quot;)
+&nbsp;    suspend fun createProduct(@Body product: NetworkProduct): NetworkProduct
+&nbsp;
+&nbsp;    @POST(&quot;orders&quot;)
+&nbsp;    suspend fun createOrder(@Body orderRequest: NetworkOrderRequest): NetworkOrder
+&nbsp;
+&nbsp;    @PUT(&quot;products/{id}&quot;)
+&nbsp;    suspend fun updateProduct(
+&nbsp;        @Path(&quot;id&quot;) id: Long,
+&nbsp;        @Body product: NetworkProduct
+&nbsp;    ): NetworkProduct
+&nbsp;
+&nbsp;    @PUT(&quot;orders/{id}&quot;)
+&nbsp;    suspend fun updateOrder(
+&nbsp;        @Path(&quot;id&quot;) id: Long,
+&nbsp;        @Body orderRequest: NetworkOrderRequest
+&nbsp;    ): NetworkOrder
+&nbsp;
+&nbsp;    @DELETE(&quot;products/{id}&quot;)
+&nbsp;    suspend fun deleteProduct(@Path(&quot;id&quot;) id: Int): Response&lt;Unit&gt;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

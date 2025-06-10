@@ -1,0 +1,283 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ProdutoRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: ProdutoRepository (com.example.trabalho.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProdutoRepository</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/7)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ProdutoRepository$adicionarProduto$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ProdutoRepository$atualizarProduto$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ProdutoRepository$carregarProdutos$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ProdutoRepository$excluirProduto$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/27)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.repository
+&nbsp;
+&nbsp;import com.example.trabalho.R
+&nbsp;import com.example.trabalho.model.entities.Produto
+&nbsp;import com.example.trabalho.model.utils.toNetworkProduct
+&nbsp;import com.example.trabalho.model.utils.toProduto
+&nbsp;import com.example.trabalho.service.ApiClient
+&nbsp;import kotlinx.coroutines.Dispatchers
+&nbsp;import kotlinx.coroutines.withContext
+&nbsp;
+&nbsp;object ProdutoRepository {
+<b class="nc">&nbsp;    private val apiService = ApiClient.apiService</b>
+&nbsp;
+&nbsp;    // Guarda o placeholder ou a escolha do usuário por ID
+<b class="nc">&nbsp;    internal val imageMap = mutableMapOf&lt;Long, Int&gt;()</b>
+<b class="nc">&nbsp;    val produtos = mutableListOf&lt;Produto&gt;()</b>
+&nbsp;
+&nbsp;    /** Carrega todos os produtos do servidor, reaproveitando imagens locais */
+&nbsp;    suspend fun carregarProdutos() {
+<b class="nc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="nc">&nbsp;            val networkProducts = apiService.getProducts()</b>
+&nbsp;
+&nbsp;            // Reconstrói a lista sem perder imagens existentes
+<b class="nc">&nbsp;            produtos.clear()</b>
+<b class="nc">&nbsp;            networkProducts.forEach { np -&gt;</b>
+<b class="nc">&nbsp;                val imgRes = np.id?.let { imageMap[it] } ?: R.drawable.adicionar_imagem</b>
+<b class="nc">&nbsp;                produtos.add(np.toProduto(imgRes))</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Adiciona um produto novo e registra sua imagem no mapa */
+&nbsp;    suspend fun adicionarProduto(produto: Produto) {
+<b class="nc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="nc">&nbsp;            val networkProduct = produto.toNetworkProduct()</b>
+<b class="nc">&nbsp;            val created = apiService.createProduct(networkProduct)</b>
+&nbsp;
+&nbsp;            // O backend retorna o ID, agora pode mapear a imagem
+<b class="nc">&nbsp;            created.id?.let { imageMap[it] = produto.imagemResId }</b>
+<b class="nc">&nbsp;            produtos.add(created.toProduto(produto.imagemResId))</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Atualiza um produto existente e atualiza a imagem no mapa */
+&nbsp;    suspend fun atualizarProduto(index: Int, produto: Produto) {
+<b class="nc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="nc">&nbsp;            val old = produtos[index]</b>
+<b class="nc">&nbsp;            val id = old.id!!</b>
+&nbsp;
+<b class="nc">&nbsp;            val networkProduct = produto.toNetworkProduct().copy(id = id)</b>
+<b class="nc">&nbsp;            val updated = apiService.updateProduct(id, networkProduct)</b>
+&nbsp;
+&nbsp;            // registra possível nova imagem
+<b class="nc">&nbsp;            imageMap[id] = produto.imagemResId</b>
+<b class="nc">&nbsp;            produtos[index] = updated.toProduto(produto.imagemResId)</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Exclui um produto e remove do mapa */
+&nbsp;    suspend fun excluirProduto(index: Int) {
+<b class="nc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="nc">&nbsp;            val id = produtos[index].id!!.toInt()</b>
+<b class="nc">&nbsp;            apiService.deleteProduct(id)</b>
+<b class="nc">&nbsp;            produtos.removeAt(index)</b>
+<b class="nc">&nbsp;            imageMap.remove(id.toLong())</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

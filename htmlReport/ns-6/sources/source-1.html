@@ -1,0 +1,156 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FormatterUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: FormatterUtils (com.example.trabalho.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FormatterUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85%
+  </span>
+  <span class="absValue">
+    (17/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.utils
+&nbsp;
+&nbsp;import java.text.NumberFormat
+&nbsp;import java.util.Locale
+&nbsp;
+&nbsp;object FormatterUtils {
+<b class="fc">&nbsp;    private val localeBR = Locale(&quot;pt&quot;, &quot;BR&quot;)</b>
+<b class="fc">&nbsp;    private val currencyFormat = NumberFormat.getCurrencyInstance(localeBR)</b>
+&nbsp;
+&nbsp;    fun formatCurrency(value: String): String {
+<b class="fc">&nbsp;        val cleanString = value.replace(Regex(&quot;\\D&quot;), &quot;&quot;)</b>
+<b class="fc">&nbsp;        return if (cleanString.isNotEmpty()) {</b>
+<b class="fc">&nbsp;            val parsed = cleanString.toDouble() / 100</b>
+<b class="fc">&nbsp;            currencyFormat.format(parsed).replace(&quot;\u00A0&quot;, &quot; &quot;) // Substitui espaço não quebrável por espaço regular</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            &quot;&quot;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    fun parseCurrencyToDouble(value: String): Double? {
+<b class="fc">&nbsp;        val raw = value.replace(Regex(&quot;[R$\\s.]&quot;), &quot;&quot;).replace(&quot;,&quot;, &quot;.&quot;)</b>
+<b class="fc">&nbsp;        return raw.toDoubleOrNull()</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    fun validateProductInput(
+&nbsp;        descricao: String,
+&nbsp;        valor: String,
+&nbsp;        detalhes: String,
+&nbsp;        imagemResId: Int
+&nbsp;    ): String? {
+<b class="fc">&nbsp;        return when {</b>
+<b class="fc">&nbsp;            descricao.isEmpty() -&gt; &quot;A descrição não pode estar vazia&quot;</b>
+<b class="pc">&nbsp;            valor.isEmpty() -&gt; &quot;O valor não pode estar vazio&quot;</b>
+<b class="pc">&nbsp;            parseCurrencyToDouble(valor)?.let { it &lt;= 0.0 } == true -&gt; &quot;O valor deve ser maior que zero&quot;</b>
+<b class="pc">&nbsp;            detalhes.isEmpty() -&gt; &quot;Os detalhes não podem estar vazios&quot;</b>
+<b class="fc">&nbsp;            imagemResId == -1 -&gt; &quot;Selecione uma imagem&quot;</b>
+<b class="fc">&nbsp;            else -&gt; null</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

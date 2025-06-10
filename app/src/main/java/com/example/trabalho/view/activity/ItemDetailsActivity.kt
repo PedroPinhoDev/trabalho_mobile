@@ -16,6 +16,7 @@ import com.example.trabalho.R
 import com.example.trabalho.model.entities.Produto
 import java.text.NumberFormat
 import java.util.Locale
+import com.example.trabalho.utils.FormatterUtils
 
 class ItemDetailsActivity : AppCompatActivity() {
 
@@ -48,18 +49,10 @@ class ItemDetailsActivity : AppCompatActivity() {
                 if (s == null || s.toString() == current) return
                 editValor.removeTextChangedListener(this)
 
-                // Remove tudo que não for dígito
-                val cleanString = s.toString().replace(Regex("\\D"), "")
-                if (cleanString.isNotEmpty()) {
-                    val parsed = cleanString.toDouble()
-                    val formatted = currencyFormat.format(parsed / 100)
-                    current = formatted
-                    editValor.setText(formatted)
-                    editValor.setSelection(formatted.length)
-                } else {
-                    current = ""
-                    editValor.setText("")
-                }
+                val formatted = FormatterUtils.formatCurrency(s.toString())
+                current = formatted
+                editValor.setText(formatted)
+                editValor.setSelection(formatted.length)
 
                 editValor.addTextChangedListener(this)
             }
@@ -111,20 +104,17 @@ class ItemDetailsActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             val descricao = editDescricao.text.toString().trim()
             val valorText = editValor.text.toString().trim()
-            val detalhes  = editDetalhes.text.toString().trim()
+            val detalhes = editDetalhes.text.toString().trim()
 
-            // Validações
-            if (descricao.isEmpty() || valorText.isEmpty() || detalhes.isEmpty() || selectedImageResId == -1) {
-                Toast.makeText(this, "Preencha todas as informações do cadastro", Toast.LENGTH_SHORT).show()
+            val validationError = FormatterUtils.validateProductInput(
+                descricao, valorText, detalhes, selectedImageResId
+            )
+            if (validationError != null) {
+                Toast.makeText(this, validationError, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Converte valor formatado em número
-            val raw = valorText.replace(Regex("[R\$\\s.]"), "").replace(",", ".")
-            val valorDouble = raw.toDoubleOrNull()
-            if (valorDouble == null || valorDouble <= 0.0) {
-                Toast.makeText(this, "O valor do produto deve ser maior que zero", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+
+            val valorDouble = FormatterUtils.parseCurrencyToDouble(valorText)!!
 
             val produto = Produto(
                 id = produtoId,
@@ -134,7 +124,6 @@ class ItemDetailsActivity : AppCompatActivity() {
                 imagemResId = selectedImageResId
             )
 
-            // Pop-up de sucesso bloqueando até OK
             AlertDialog.Builder(this)
                 .setMessage("Produto salvo com sucesso!")
                 .setPositiveButton("OK") { dialog, _ ->

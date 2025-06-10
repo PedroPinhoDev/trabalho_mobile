@@ -10,11 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trabalho.view.activity.ListasPedidosActivity
-import com.example.trabalho.repository.PedidoRepository
 import com.example.trabalho.R
-import com.example.trabalho.model.entities.Pedido
 import com.example.trabalho.model.entities.ProdutoPedido
+import com.example.trabalho.repository.PedidoRepository
+import com.example.trabalho.utils.OrderUtils
 import com.example.trabalho.view.adapter.PedidoAdapter
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
@@ -34,16 +33,16 @@ class ItemOrderActivity : AppCompatActivity() {
         val btnConfirmarPedido = findViewById<MaterialButton>(R.id.btnConfirmarPedido)
 
         listaProdutos = intent.getParcelableArrayListExtra("produtos") ?: arrayListOf()
-        adapter =
-            PedidoAdapter(listaProdutos) { produto, isChecked -> produto.selecionado = isChecked }
+        adapter = PedidoAdapter(listaProdutos) { produto, isChecked -> produto.selecionado = isChecked }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         textViewSemPedidos.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
 
         btnConfirmarPedido.setOnClickListener {
-            if (listaProdutos.none { it.selecionado }) {
+            val validationError = OrderUtils.validateSelectedProducts(listaProdutos)
+            if (validationError != null) {
                 AlertDialog.Builder(this)
-                    .setMessage("Nenhum item selecionado!")
+                    .setMessage(validationError)
                     .setPositiveButton("OK") { dlg, _ -> dlg.dismiss() }
                     .show()
             } else {
@@ -60,10 +59,7 @@ class ItemOrderActivity : AppCompatActivity() {
     }
 
     private fun confirmarPedido() {
-        val selecionados = listaProdutos.filter { it.selecionado }
-        val total = selecionados.sumOf { it.preco }
-        val pedido = Pedido(codigo = "", produtos = selecionados, total = total)
-
+        val pedido = OrderUtils.createOrder(listaProdutos)
         lifecycleScope.launch {
             val newPedido = PedidoRepository.criarPedidoRetornando(pedido)
             AlertDialog.Builder(this@ItemOrderActivity)
@@ -73,7 +69,7 @@ class ItemOrderActivity : AppCompatActivity() {
                 .show()
 
             // Limpa seleção e atualiza lista
-            listaProdutos.forEach { it.selecionado = false }
+            OrderUtils.clearSelection(listaProdutos)
             adapter.notifyDataSetChanged()
         }
     }

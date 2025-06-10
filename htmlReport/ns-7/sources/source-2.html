@@ -1,0 +1,326 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ItemDetailsActivity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.view.activity</a>
+</div>
+
+<h1>Coverage Summary for Class: ItemDetailsActivity (com.example.trabalho.view.activity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemDetailsActivity</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/92)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ItemDetailsActivity$onCreate$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/102)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.view.activity
+&nbsp;
+&nbsp;import android.content.Intent
+&nbsp;import android.os.Bundle
+&nbsp;import android.text.Editable
+&nbsp;import android.text.TextWatcher
+&nbsp;import android.view.View
+&nbsp;import android.widget.EditText
+&nbsp;import android.widget.ImageButton
+&nbsp;import android.widget.ImageView
+&nbsp;import android.widget.TextView
+&nbsp;import android.widget.Toast
+&nbsp;import androidx.appcompat.app.AlertDialog
+&nbsp;import androidx.appcompat.app.AppCompatActivity
+&nbsp;import com.example.trabalho.R
+&nbsp;import com.example.trabalho.model.entities.Produto
+&nbsp;import java.text.NumberFormat
+&nbsp;import java.util.Locale
+&nbsp;import com.example.trabalho.utils.FormatterUtils
+&nbsp;
+<b class="nc">&nbsp;class ItemDetailsActivity : AppCompatActivity() {</b>
+&nbsp;
+<b class="nc">&nbsp;    private var selectedImageResId = -1</b>
+<b class="nc">&nbsp;    private var produtoIndex: Int = -1</b>
+&nbsp;    private var produtoId: Long? = null
+&nbsp;
+&nbsp;    override fun onCreate(savedInstanceState: Bundle?) {
+<b class="nc">&nbsp;        super.onCreate(savedInstanceState)</b>
+<b class="nc">&nbsp;        setContentView(R.layout.activity_item_details)</b>
+&nbsp;
+<b class="nc">&nbsp;        val imageSelectButton = findViewById&lt;ImageView&gt;(R.id.imageSelectButton)</b>
+<b class="nc">&nbsp;        val editDescricao     = findViewById&lt;EditText&gt;(R.id.editDescricao)</b>
+<b class="nc">&nbsp;        val editValor         = findViewById&lt;EditText&gt;(R.id.editValor)</b>
+<b class="nc">&nbsp;        val editDetalhes      = findViewById&lt;EditText&gt;(R.id.editDetalhes)</b>
+<b class="nc">&nbsp;        val btnSave           = findViewById&lt;ImageButton&gt;(R.id.btnSave)</b>
+<b class="nc">&nbsp;        val btnDelete         = findViewById&lt;ImageButton&gt;(R.id.btnDelete)</b>
+<b class="nc">&nbsp;        val btnBack           = findViewById&lt;ImageButton&gt;(R.id.btnBack)</b>
+<b class="nc">&nbsp;        val tituloTextView    = findViewById&lt;TextView&gt;(R.id.titleTextView)</b>
+&nbsp;
+&nbsp;        // Formatação de moeda brasileira em tempo real
+<b class="nc">&nbsp;        val localeBR = Locale(&quot;pt&quot;, &quot;BR&quot;)</b>
+<b class="nc">&nbsp;        val currencyFormat = NumberFormat.getCurrencyInstance(localeBR)</b>
+<b class="nc">&nbsp;        var current = &quot;&quot;</b>
+&nbsp;
+<b class="nc">&nbsp;        editValor.addTextChangedListener(object : TextWatcher {</b>
+<b class="nc">&nbsp;            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}</b>
+<b class="nc">&nbsp;            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}</b>
+&nbsp;            override fun afterTextChanged(s: Editable?) {
+<b class="nc">&nbsp;                if (s == null || s.toString() == current) return</b>
+<b class="nc">&nbsp;                editValor.removeTextChangedListener(this)</b>
+&nbsp;
+<b class="nc">&nbsp;                val formatted = FormatterUtils.formatCurrency(s.toString())</b>
+<b class="nc">&nbsp;                current = formatted</b>
+<b class="nc">&nbsp;                editValor.setText(formatted)</b>
+<b class="nc">&nbsp;                editValor.setSelection(formatted.length)</b>
+&nbsp;
+<b class="nc">&nbsp;                editValor.addTextChangedListener(this)</b>
+&nbsp;            }
+&nbsp;        })
+&nbsp;
+&nbsp;        // Placeholder inicial
+<b class="nc">&nbsp;        selectedImageResId = R.drawable.adicionar_imagem</b>
+<b class="nc">&nbsp;        imageSelectButton.setImageResource(selectedImageResId)</b>
+&nbsp;
+&nbsp;        // Se for edição, carrega dados e formata valor
+<b class="nc">&nbsp;        val produtoEdit = intent.getSerializableExtra(&quot;produto&quot;) as? Produto</b>
+<b class="nc">&nbsp;        produtoIndex    = intent.getIntExtra(&quot;index&quot;, -1)</b>
+<b class="nc">&nbsp;        if (produtoEdit != null) {</b>
+<b class="nc">&nbsp;            editDescricao.setText(produtoEdit.descricao)</b>
+<b class="nc">&nbsp;            val formatted = currencyFormat.format(produtoEdit.valor)</b>
+<b class="nc">&nbsp;            current = formatted</b>
+<b class="nc">&nbsp;            editValor.setText(formatted)</b>
+<b class="nc">&nbsp;            editDetalhes.setText(produtoEdit.detalhes)</b>
+<b class="nc">&nbsp;            produtoId = produtoEdit.id</b>
+&nbsp;
+<b class="nc">&nbsp;            selectedImageResId = produtoEdit.imagemResId</b>
+<b class="nc">&nbsp;            imageSelectButton.setImageResource(selectedImageResId)</b>
+&nbsp;
+<b class="nc">&nbsp;            tituloTextView.text = &quot;Edição Produtos&quot;</b>
+<b class="nc">&nbsp;            btnDelete.visibility = View.VISIBLE</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            btnDelete.visibility = View.GONE</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Escolha de imagem
+<b class="nc">&nbsp;        imageSelectButton.setOnClickListener {</b>
+<b class="nc">&nbsp;            val nomes = arrayOf(&quot;Camisa&quot;,&quot;Bermuda&quot;,&quot;Jeans&quot;,&quot;Chinelo&quot;)</b>
+<b class="nc">&nbsp;            val ids   = arrayOf(</b>
+<b class="nc">&nbsp;                R.drawable.shirt_image,</b>
+<b class="nc">&nbsp;                R.drawable.bermuda_image,</b>
+<b class="nc">&nbsp;                R.drawable.jeans_image,</b>
+<b class="nc">&nbsp;                R.drawable.chinelo_image</b>
+&nbsp;            )
+<b class="nc">&nbsp;            AlertDialog.Builder(this)</b>
+<b class="nc">&nbsp;                .setTitle(&quot;Escolha uma imagem&quot;)</b>
+<b class="nc">&nbsp;                .setItems(nomes) { _, which -&gt;</b>
+<b class="nc">&nbsp;                    selectedImageResId = ids[which]</b>
+<b class="nc">&nbsp;                    imageSelectButton.setImageResource(selectedImageResId)</b>
+&nbsp;                }
+<b class="nc">&nbsp;                .show()</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Salvar produto
+<b class="nc">&nbsp;        btnSave.setOnClickListener {</b>
+<b class="nc">&nbsp;            val descricao = editDescricao.text.toString().trim()</b>
+<b class="nc">&nbsp;            val valorText = editValor.text.toString().trim()</b>
+<b class="nc">&nbsp;            val detalhes = editDetalhes.text.toString().trim()</b>
+&nbsp;
+<b class="nc">&nbsp;            val validationError = FormatterUtils.validateProductInput(</b>
+<b class="nc">&nbsp;                descricao, valorText, detalhes, selectedImageResId</b>
+&nbsp;            )
+<b class="nc">&nbsp;            if (validationError != null) {</b>
+<b class="nc">&nbsp;                Toast.makeText(this, validationError, Toast.LENGTH_SHORT).show()</b>
+&nbsp;                return@setOnClickListener
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            val valorDouble = FormatterUtils.parseCurrencyToDouble(valorText)!!</b>
+&nbsp;
+<b class="nc">&nbsp;            val produto = Produto(</b>
+<b class="nc">&nbsp;                id = produtoId,</b>
+<b class="nc">&nbsp;                descricao = descricao,</b>
+<b class="nc">&nbsp;                valor = valorDouble,</b>
+<b class="nc">&nbsp;                detalhes = detalhes,</b>
+<b class="nc">&nbsp;                imagemResId = selectedImageResId</b>
+&nbsp;            )
+&nbsp;
+<b class="nc">&nbsp;            AlertDialog.Builder(this)</b>
+<b class="nc">&nbsp;                .setMessage(&quot;Produto salvo com sucesso!&quot;)</b>
+<b class="nc">&nbsp;                .setPositiveButton(&quot;OK&quot;) { dialog, _ -&gt;</b>
+<b class="nc">&nbsp;                    dialog.dismiss()</b>
+<b class="nc">&nbsp;                    setResult(RESULT_OK, Intent().apply {</b>
+<b class="nc">&nbsp;                        putExtra(&quot;produto&quot;, produto)</b>
+<b class="nc">&nbsp;                        putExtra(&quot;index&quot;, produtoIndex)</b>
+<b class="nc">&nbsp;                    })</b>
+<b class="nc">&nbsp;                    finish()</b>
+&nbsp;                }
+<b class="nc">&nbsp;                .setCancelable(false)</b>
+<b class="nc">&nbsp;                .show()</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Excluir produto
+<b class="nc">&nbsp;        btnDelete.setOnClickListener {</b>
+<b class="nc">&nbsp;            AlertDialog.Builder(this)</b>
+<b class="nc">&nbsp;                .setTitle(&quot;Excluir produto&quot;)</b>
+<b class="nc">&nbsp;                .setMessage(&quot;Deseja realmente excluir este produto?&quot;)</b>
+<b class="nc">&nbsp;                .setPositiveButton(&quot;Sim&quot;) { dialog, _ -&gt;</b>
+<b class="nc">&nbsp;                    dialog.dismiss()</b>
+<b class="nc">&nbsp;                    AlertDialog.Builder(this)</b>
+<b class="nc">&nbsp;                        .setMessage(&quot;Produto deletado com sucesso!&quot;)</b>
+<b class="nc">&nbsp;                        .setPositiveButton(&quot;OK&quot;) { dlg, _ -&gt;</b>
+<b class="nc">&nbsp;                            dlg.dismiss()</b>
+<b class="nc">&nbsp;                            Intent().also { intent -&gt;</b>
+<b class="nc">&nbsp;                                intent.putExtra(&quot;index&quot;, produtoIndex)</b>
+<b class="nc">&nbsp;                                setResult(RESULT_FIRST_USER, intent)</b>
+<b class="nc">&nbsp;                            }</b>
+<b class="nc">&nbsp;                            finish()</b>
+&nbsp;                        }
+<b class="nc">&nbsp;                        .setCancelable(false)</b>
+<b class="nc">&nbsp;                        .show()</b>
+&nbsp;                }
+<b class="nc">&nbsp;                .setNegativeButton(&quot;Não&quot;) { dialog, _ -&gt; dialog.dismiss() }</b>
+<b class="nc">&nbsp;                .show()</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Voltar
+<b class="nc">&nbsp;        btnBack.setOnClickListener { finish() }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

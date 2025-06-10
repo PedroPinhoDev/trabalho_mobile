@@ -1,0 +1,305 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MainActivity</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.view.activity</a>
+</div>
+
+<h1>Coverage Summary for Class: MainActivity (com.example.trabalho.view.activity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainActivity</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/46)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MainActivity$Companion</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$onActivityResult$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$onActivityResult$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$onCreate$4</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/53)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.view.activity
+&nbsp;
+&nbsp;import android.content.Intent
+&nbsp;import android.os.Bundle
+&nbsp;import android.view.View
+&nbsp;import android.widget.ImageView
+&nbsp;import android.widget.LinearLayout
+&nbsp;import android.widget.TextView
+&nbsp;import androidx.appcompat.app.AppCompatActivity
+&nbsp;import androidx.lifecycle.lifecycleScope
+&nbsp;import com.example.trabalho.repository.ProdutoRepository
+&nbsp;import com.example.trabalho.R
+&nbsp;import com.example.trabalho.model.entities.Produto
+&nbsp;import com.example.trabalho.model.entities.ProdutoPedido
+&nbsp;import com.google.android.material.floatingactionbutton.FloatingActionButton
+&nbsp;import kotlinx.coroutines.launch
+&nbsp;
+<b class="nc">&nbsp;class MainActivity : AppCompatActivity() {</b>
+&nbsp;
+&nbsp;    companion object {
+&nbsp;        const val REQUEST_CODE_ADD = 1
+&nbsp;        const val REQUEST_CODE_EDIT = 2
+&nbsp;    }
+&nbsp;
+&nbsp;    private lateinit var listaLayout: LinearLayout
+&nbsp;
+&nbsp;    override fun onCreate(savedInstanceState: Bundle?) {
+<b class="nc">&nbsp;        super.onCreate(savedInstanceState)</b>
+<b class="nc">&nbsp;        setContentView(R.layout.activity_main)</b>
+&nbsp;
+<b class="nc">&nbsp;        listaLayout = findViewById(R.id.listaProdutosLayout)</b>
+<b class="nc">&nbsp;        val fabAdd = findViewById&lt;FloatingActionButton&gt;(R.id.fabAdd)</b>
+<b class="nc">&nbsp;        val textViewSemProdutos = findViewById&lt;TextView&gt;(R.id.textViewSemProdutos)</b>
+&nbsp;
+<b class="nc">&nbsp;        fabAdd.setOnClickListener {</b>
+<b class="nc">&nbsp;            startActivityForResult(Intent(this, ItemDetailsActivity::class.java), REQUEST_CODE_ADD)</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        findViewById&lt;ImageView&gt;(R.id.carrinho).setOnClickListener {</b>
+<b class="nc">&nbsp;            val listaPedido = ProdutoRepository.produtos.map { produto -&gt;</b>
+<b class="nc">&nbsp;                ProdutoPedido(</b>
+<b class="nc">&nbsp;                    id = produto.id!!,</b>
+<b class="nc">&nbsp;                    imagemResId = produto.imagemResId,</b>
+<b class="nc">&nbsp;                    descricao = produto.descricao,</b>
+<b class="nc">&nbsp;                    preco = produto.valor,</b>
+<b class="nc">&nbsp;                    detalhes = produto.detalhes</b>
+&nbsp;                )
+&nbsp;            }
+<b class="nc">&nbsp;            val intent = Intent(this, ItemOrderActivity::class.java)</b>
+<b class="nc">&nbsp;            intent.putParcelableArrayListExtra(&quot;produtos&quot;, ArrayList(listaPedido))</b>
+<b class="nc">&nbsp;            startActivity(intent)</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        findViewById&lt;ImageView&gt;(R.id.historico).setOnClickListener {</b>
+<b class="nc">&nbsp;            startActivity(Intent(this, ListasPedidosActivity::class.java))</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        lifecycleScope.launch {</b>
+<b class="nc">&nbsp;            ProdutoRepository.carregarProdutos()</b>
+<b class="nc">&nbsp;            atualizarLista()</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+<b class="nc">&nbsp;        super.onActivityResult(requestCode, resultCode, data)</b>
+&nbsp;
+<b class="nc">&nbsp;        val produto = data?.getSerializableExtra(&quot;produto&quot;) as? Produto</b>
+<b class="nc">&nbsp;        val index    = data?.getIntExtra(&quot;index&quot;, -1) ?: -1</b>
+&nbsp;
+<b class="nc">&nbsp;        if (resultCode == RESULT_OK &amp;&amp; produto != null) {</b>
+<b class="nc">&nbsp;            lifecycleScope.launch {</b>
+<b class="nc">&nbsp;                if (requestCode == REQUEST_CODE_ADD) ProdutoRepository.adicionarProduto(produto)</b>
+<b class="nc">&nbsp;                else if (requestCode == REQUEST_CODE_EDIT &amp;&amp; index &gt;= 0) ProdutoRepository.atualizarProduto(index, produto)</b>
+<b class="nc">&nbsp;                atualizarLista()</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } else if (resultCode == RESULT_FIRST_USER &amp;&amp; index &gt;= 0) {</b>
+<b class="nc">&nbsp;            lifecycleScope.launch {</b>
+<b class="nc">&nbsp;                ProdutoRepository.excluirProduto(index)</b>
+<b class="nc">&nbsp;                atualizarLista()</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private fun atualizarLista() {
+<b class="nc">&nbsp;        listaLayout.removeAllViews()</b>
+<b class="nc">&nbsp;        val sem = findViewById&lt;TextView&gt;(R.id.textViewSemProdutos)</b>
+<b class="nc">&nbsp;        if (ProdutoRepository.produtos.isEmpty()) sem.visibility = View.VISIBLE</b>
+&nbsp;        else {
+<b class="nc">&nbsp;            sem.visibility = View.GONE</b>
+<b class="nc">&nbsp;            ProdutoRepository.produtos.forEachIndexed { i, produto -&gt;</b>
+<b class="nc">&nbsp;                val card = layoutInflater.inflate(R.layout.item_produto, null)</b>
+<b class="nc">&nbsp;                card.findViewById&lt;TextView&gt;(R.id.descriptionTextView).text = produto.descricao</b>
+<b class="nc">&nbsp;                card.findViewById&lt;TextView&gt;(R.id.priceTextView).text = &quot;R$ %.2f&quot;.format(produto.valor)</b>
+<b class="nc">&nbsp;                card.findViewById&lt;TextView&gt;(R.id.detailsTextView).text = produto.detalhes</b>
+<b class="nc">&nbsp;                card.findViewById&lt;ImageView&gt;(R.id.itemImageView).setImageResource(produto.imagemResId)</b>
+<b class="nc">&nbsp;                card.setOnClickListener {</b>
+<b class="nc">&nbsp;                    val it = Intent(this, ItemDetailsActivity::class.java)</b>
+<b class="nc">&nbsp;                    it.putExtra(&quot;produto&quot;, produto)</b>
+<b class="nc">&nbsp;                    it.putExtra(&quot;index&quot;, i)</b>
+<b class="nc">&nbsp;                    startActivityForResult(it, REQUEST_CODE_EDIT)</b>
+&nbsp;                }
+<b class="nc">&nbsp;                listaLayout.addView(card)</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>

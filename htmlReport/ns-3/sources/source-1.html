@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ModelConverterKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.trabalho.model.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: ModelConverterKt (com.example.trabalho.model.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ModelConverterKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    62,5%
+  </span>
+  <span class="absValue">
+    (5/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (35/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.trabalho.model.utils
+&nbsp;
+&nbsp;import com.example.trabalho.model.entities.Produto
+&nbsp;import com.example.trabalho.model.entities.ProdutoPedido
+&nbsp;import com.example.trabalho.model.entities.Pedido
+&nbsp;import com.example.trabalho.R
+&nbsp;import com.example.trabalho.model.network.NetworkProduct
+&nbsp;import com.example.trabalho.model.network.NetworkOrder
+&nbsp;import com.example.trabalho.model.network.NetworkOrderRequest
+&nbsp;
+&nbsp;// Mapeia Produto do app para o modelo de rede
+&nbsp;fun Produto.toNetworkProduct(): NetworkProduct {
+<b class="fc">&nbsp;    return NetworkProduct(</b>
+<b class="fc">&nbsp;        id = this.id,</b>
+<b class="fc">&nbsp;        name = this.descricao,</b>
+<b class="fc">&nbsp;        description = this.detalhes,</b>
+<b class="fc">&nbsp;        price = this.valor</b>
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;// Mapeia NetworkProduct (resposta da API) para Produto do app
+&nbsp;fun NetworkProduct.toProduto(imagemResId: Int): Produto {
+<b class="fc">&nbsp;    return Produto(</b>
+<b class="fc">&nbsp;        id = this.id,</b>
+<b class="fc">&nbsp;        descricao = this.name,</b>
+<b class="fc">&nbsp;        valor = this.price,</b>
+<b class="fc">&nbsp;        detalhes = this.description,</b>
+<b class="fc">&nbsp;        imagemResId = imagemResId</b>
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;// Mapeia ProdutoPedido do app para NetworkProduct (caso precise criar produtos)
+&nbsp;fun ProdutoPedido.toNetworkProduct(): NetworkProduct {
+<b class="fc">&nbsp;    return NetworkProduct(</b>
+<b class="fc">&nbsp;        id = this.id,</b>
+<b class="fc">&nbsp;        name = this.descricao,</b>
+<b class="fc">&nbsp;        description = this.detalhes,</b>
+<b class="fc">&nbsp;        price = this.preco</b>
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;// Mapeia NetworkProduct (dentro de pedido) para ProdutoPedido do app
+&nbsp;fun NetworkProduct.toProdutoPedido(imagemResId: Int): ProdutoPedido {
+<b class="fc">&nbsp;    return ProdutoPedido(</b>
+<b class="pc">&nbsp;        id = this.id ?: throw IllegalArgumentException(&quot;NetworkProduct.id é nulo&quot;),</b>
+<b class="fc">&nbsp;        imagemResId = imagemResId,</b>
+<b class="fc">&nbsp;        descricao = this.name,</b>
+<b class="fc">&nbsp;        preco = this.price,</b>
+<b class="fc">&nbsp;        detalhes = this.description,</b>
+<b class="fc">&nbsp;        selecionado = false</b>
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;// Mapeia Pedido do app para DTO de rede para criação/atualização
+&nbsp;fun Pedido.toNetworkOrderRequest(): NetworkOrderRequest {
+<b class="fc">&nbsp;    return NetworkOrderRequest(</b>
+<b class="fc">&nbsp;        status = this.status,</b>
+<b class="fc">&nbsp;        productIds = this.produtos.map { it.id }</b>
+&nbsp;    )
+&nbsp;}
+&nbsp;
+&nbsp;// Mapeia NetworkOrder (resposta da API) para Pedido do app
+&nbsp;fun NetworkOrder.toPedido(codigo: String, imagemResIds: List&lt;Int&gt;): Pedido {
+<b class="fc">&nbsp;    val produtos = this.products.mapIndexed { index, networkProduct -&gt;</b>
+<b class="fc">&nbsp;        networkProduct.toProdutoPedido(</b>
+<b class="pc">&nbsp;            imagemResIds.getOrElse(index) { R.drawable.adicionar_imagem }</b>
+&nbsp;        )
+&nbsp;    }
+<b class="fc">&nbsp;    return Pedido(</b>
+<b class="fc">&nbsp;        id = this.id,</b>
+<b class="fc">&nbsp;        codigo = codigo,</b>
+<b class="fc">&nbsp;        produtos = produtos,</b>
+<b class="fc">&nbsp;        total = produtos.sumOf { it.preco },</b>
+<b class="fc">&nbsp;        status = this.status</b>
+&nbsp;    )
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-06-10 13:10</div>
+</div>
+</body>
+</html>
