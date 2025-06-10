@@ -40,7 +40,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
 
-    // Suas dependências de app
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -52,7 +51,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ui.test.android)
 
-    // Dependências de Teste (Corrigidas e sem duplicatas)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
