@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "327847427023",
+    "project_id": "pedido-facil-5d03c",
+    "storage_bucket": "pedido-facil-5d03c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327847427023:android:dd51d22e19fb2485bd30ba",
+        "android_client_info": {
+          "package_name": "com.pedido.trabalho"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAP0dqUgi9ICBIUQSBFGwo35nBT2_gosQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
