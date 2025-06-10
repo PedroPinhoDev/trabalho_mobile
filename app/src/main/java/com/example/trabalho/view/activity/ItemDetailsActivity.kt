@@ -1,6 +1,11 @@
 package com.example.trabalho.view.activity
 
+import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,14 +17,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.trabalho.R
 import com.example.trabalho.model.entities.Produto
+import java.io.File
 import java.text.NumberFormat
 import java.util.Locale
 
 class ItemDetailsActivity : AppCompatActivity() {
 
-    private var selectedImageResId = -1
+    companion object {
+        private const val REQUEST_CODE_PICK_IMAGE = 100
+        private const val REQUEST_CODE_STORAGE_PERMISSION = 200
+    }
+
+    private var selectedImageResId = R.drawable.adicionar_imagem
+    private var selectedImageUri: Uri? = null
     private var produtoIndex: Int = -1
     private var produtoId: Long? = null
 
@@ -36,22 +50,19 @@ class ItemDetailsActivity : AppCompatActivity() {
         val btnBack           = findViewById<ImageButton>(R.id.btnBack)
         val tituloTextView    = findViewById<TextView>(R.id.titleTextView)
 
-        // Formatação de moeda brasileira em tempo real
+        // Formatação de moeda brasileira
         val localeBR = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(localeBR)
         var current = ""
-
         editValor.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 if (s == null || s.toString() == current) return
                 editValor.removeTextChangedListener(this)
-
-                // Remove tudo que não for dígito
-                val cleanString = s.toString().replace(Regex("\\D"), "")
-                if (cleanString.isNotEmpty()) {
-                    val parsed = cleanString.toDouble()
+                val clean = s.toString().replace("\\D+".toRegex(), "")
+                if (clean.isNotEmpty()) {
+                    val parsed = clean.toDouble()
                     val formatted = currencyFormat.format(parsed / 100)
                     current = formatted
                     editValor.setText(formatted)
@@ -60,39 +71,36 @@ class ItemDetailsActivity : AppCompatActivity() {
                     current = ""
                     editValor.setText("")
                 }
-
                 editValor.addTextChangedListener(this)
             }
         })
 
-        // Placeholder inicial
-        selectedImageResId = R.drawable.adicionar_imagem
-        imageSelectButton.setImageResource(selectedImageResId)
-
-        // Se for edição, carrega dados e formata valor
+        // Se for edição, carrega dados existentes
         val produtoEdit = intent.getSerializableExtra("produto") as? Produto
         produtoIndex    = intent.getIntExtra("index", -1)
         if (produtoEdit != null) {
             editDescricao.setText(produtoEdit.descricao)
-            val formatted = currencyFormat.format(produtoEdit.valor)
-            current = formatted
-            editValor.setText(formatted)
+            editValor.setText(currencyFormat.format(produtoEdit.valor))
             editDetalhes.setText(produtoEdit.detalhes)
             produtoId = produtoEdit.id
-
-            selectedImageResId = produtoEdit.imagemResId
-            imageSelectButton.setImageResource(selectedImageResId)
-
-            tituloTextView.text = "Edição Produtos"
+            if (produtoEdit.imagePath != null) {
+                selectedImageUri = Uri.parse(produtoEdit.imagePath)
+                imageSelectButton.setImageURI(selectedImageUri)
+            } else {
+                selectedImageResId = produtoEdit.imagemResId
+                imageSelectButton.setImageResource(selectedImageResId)
+            }
+            tituloTextView.text = "Edição Produto"
             btnDelete.visibility = View.VISIBLE
         } else {
             btnDelete.visibility = View.GONE
+            imageSelectButton.setImageResource(selectedImageResId)
         }
 
-        // Escolha de imagem
+        // Escolha de imagem: Galeria ou recurso interno
         imageSelectButton.setOnClickListener {
-            val nomes = arrayOf("Camisa","Bermuda","Jeans","Chinelo")
-            val ids   = arrayOf(
+            val options = arrayOf("Galeria", "Camisa", "Bermuda", "Jeans", "Chinelo")
+            val resourceIds = arrayOf(-1,
                 R.drawable.shirt_image,
                 R.drawable.bermuda_image,
                 R.drawable.jeans_image,
@@ -100,45 +108,46 @@ class ItemDetailsActivity : AppCompatActivity() {
             )
             AlertDialog.Builder(this)
                 .setTitle("Escolha uma imagem")
-                .setItems(nomes) { _, which ->
-                    selectedImageResId = ids[which]
-                    imageSelectButton.setImageResource(selectedImageResId)
+                .setItems(options) { _, which ->
+                    if (which == 0) requestStoragePermissionOrPick()
+                    else {
+                        selectedImageResId = resourceIds[which]
+                        selectedImageUri = null
+                        imageSelectButton.setImageResource(selectedImageResId)
+                    }
                 }
                 .show()
         }
 
-        // Salvar produto
+        // Botão Salvar
         btnSave.setOnClickListener {
-            val descricao = editDescricao.text.toString().trim()
-            val valorText = editValor.text.toString().trim()
-            val detalhes  = editDetalhes.text.toString().trim()
-
-            // Validações
-            if (descricao.isEmpty() || valorText.isEmpty() || detalhes.isEmpty() || selectedImageResId == -1) {
-                Toast.makeText(this, "Preencha todas as informações do cadastro", Toast.LENGTH_SHORT).show()
+            val desc    = editDescricao.text.toString().trim()
+            val valText = editValor.text.toString().trim()
+            val det     = editDetalhes.text.toString().trim()
+            if (desc.isEmpty() || valText.isEmpty() || det.isEmpty()) {
+                Toast.makeText(this, "Preencha todas as informações", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Converte valor formatado em número
-            val raw = valorText.replace(Regex("[R\$\\s.]"), "").replace(",", ".")
-            val valorDouble = raw.toDoubleOrNull()
-            if (valorDouble == null || valorDouble <= 0.0) {
-                Toast.makeText(this, "O valor do produto deve ser maior que zero", Toast.LENGTH_SHORT).show()
+            val raw = valText.replace("[R$\\s.]".toRegex(), "").replace(",", ".")
+            val valor = raw.toDoubleOrNull()
+            if (valor == null || valor <= 0.0) {
+                Toast.makeText(this, "Valor deve ser maior que zero", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val produto = Produto(
-                id = produtoId,
-                descricao = descricao,
-                valor = valorDouble,
-                detalhes = detalhes,
+                id          = produtoId,
+                descricao   = desc,
+                valor       = valor,
+                detalhes    = det,
+                imagePath   = selectedImageUri?.toString(),
                 imagemResId = selectedImageResId
             )
 
-            // Pop-up de sucesso bloqueando até OK
             AlertDialog.Builder(this)
                 .setMessage("Produto salvo com sucesso!")
-                .setPositiveButton("OK") { dialog, _ ->
-                    dialog.dismiss()
+                .setPositiveButton("OK") { dialogInterface: DialogInterface, _ ->
+                    dialogInterface.dismiss()
                     setResult(RESULT_OK, Intent().apply {
                         putExtra("produto", produto)
                         putExtra("index", produtoIndex)
@@ -146,34 +155,114 @@ class ItemDetailsActivity : AppCompatActivity() {
                     finish()
                 }
                 .setCancelable(false)
+                .create()
                 .show()
         }
 
-        // Excluir produto
+        // Botão Excluir
         btnDelete.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("Excluir produto")
+                .setTitle("Excluir produto?")
                 .setMessage("Deseja realmente excluir este produto?")
-                .setPositiveButton("Sim") { dialog, _ ->
-                    dialog.dismiss()
-                    AlertDialog.Builder(this)
-                        .setMessage("Produto deletado com sucesso!")
-                        .setPositiveButton("OK") { dlg, _ ->
-                            dlg.dismiss()
-                            Intent().also { intent ->
-                                intent.putExtra("index", produtoIndex)
-                                setResult(RESULT_FIRST_USER, intent)
-                            }
-                            finish()
-                        }
-                        .setCancelable(false)
-                        .show()
+                .setPositiveButton("Sim") { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                    setResult(RESULT_FIRST_USER, Intent().apply {
+                        putExtra("index", produtoIndex)
+                    })
+                    finish()
                 }
-                .setNegativeButton("Não") { dialog, _ -> dialog.dismiss() }
+                .setNegativeButton("Não") { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                }
+                .create()
                 .show()
         }
 
-        // Voltar
+        // Botão Voltar
         btnBack.setOnClickListener { finish() }
+    }
+
+    private fun requestStoragePermissionOrPick() {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                // Android 13+ precisa de READ_MEDIA_IMAGES
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_MEDIA_IMAGES
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                        REQUEST_CODE_STORAGE_PERMISSION
+                    )
+                } else {
+                    pickImageFromGallery()
+                }
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                // Android 6–12 usa READ_EXTERNAL_STORAGE
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        REQUEST_CODE_STORAGE_PERMISSION
+                    )
+                } else {
+                    pickImageFromGallery()
+                }
+            }
+            else -> {
+                // Android 5.1 e anteriores não precisam de permissão em runtime
+                pickImageFromGallery()
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION &&
+            grantResults.isNotEmpty() &&
+            grantResults[0] == PackageManager.PERMISSION_GRANTED
+        ) {
+            pickImageFromGallery()
+        } else {
+            Toast.makeText(this,
+                "Permissão negada para acessar a galeria",
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
+        startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
+            data?.data?.let { uri ->
+                val filename = "imagem_${System.currentTimeMillis()}.jpg"
+                contentResolver.openInputStream(uri)?.use { input ->
+                    openFileOutput(filename, MODE_PRIVATE).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                selectedImageUri = Uri.fromFile(File(filesDir, filename))
+                findViewById<ImageView>(R.id.imageSelectButton)
+                    .setImageURI(selectedImageUri)
+                selectedImageResId = R.drawable.adicionar_imagem
+            }
+        }
     }
 }
